@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yodla — Duolingo Uslubida Ingliz Tili Lug'ati</title>
+  <!-- Google Fonts: Nunito -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Web App Wrapper -->
+  <div class="app-container">
+
+    <!-- Sidebar Navigation (Desktop) / Bottom Bar (Mobile) -->
+    <nav class="sidebar" id="main-nav">
+      <div class="brand">
+        <!-- Mascot Logo Mini -->
+        <svg class="logo-svg" viewBox="0 0 100 100" width="40" height="40">
+          <circle cx="50" cy="50" r="45" fill="#58CC02"/>
+          <circle cx="35" cy="45" r="10" fill="white"/>
+          <circle cx="35" cy="45" r="5" fill="black"/>
+          <circle cx="65" cy="45" r="10" fill="white"/>
+          <circle cx="65" cy="45" r="5" fill="black"/>
+          <path d="M 40 65 Q 50 75 60 65" stroke="white" stroke-width="4" fill="none" stroke-linecap="round"/>
+        </svg>
+        <span class="brand-name">Yodla</span>
+      </div>
+
+      <ul class="nav-links">
+        <li class="nav-item active" data-target="dashboard-page">
+          <a href="#">
+            <span class="icon">🏠</span>
+            <span class="text">Bosh sahifa</span>
+          </a>
+        </li>
+        <li class="nav-item" data-target="vocab-page">
+          <a href="#">
+            <span class="icon">📖</span>
+            <span class="text">Lug'at</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="nav-footer">
+        <div class="sidebar-stat">
+          <span class="stat-icon">⭐</span>
+          <span class="stat-label">Jami XP:</span>
+          <span class="stat-value" id="nav-xp">0</span>
+        </div>
+        <div class="sidebar-stat">
+          <span class="stat-icon">🔥</span>
+          <span class="stat-label">Streak:</span>
+          <span class="stat-value" id="nav-streak">0 kun</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- ================= DASHBOARD PAGE ================= -->
+      <section id="dashboard-page" class="page active">
+        <div class="dashboard-grid">
+          
+          <!-- Left Column: Primary Actions -->
+          <div class="dash-main">
+            <!-- Daily Goal Card with Mascot -->
+            <div class="mascot-card">
+              <div class="mascot-container" id="dashboard-mascot">
+                <!-- Mascot SVG (Neutral State) -->
+                <svg class="mascot-svg neutral" viewBox="0 0 200 200" width="120" height="120">
+                  <defs>
+                    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#78E117" />
+                      <stop offset="100%" stop-color="#58CC02" />
+                    </linearGradient>
+                  </defs>
+                  <!-- Shadow -->
+                  <ellipse cx="100" cy="180" rx="60" ry="10" fill="rgba(0,0,0,0.1)"/>
+                  <!-- Wings/Arms -->
+                  <path class="arm-left" d="M 50 110 Q 25 100 40 85 Q 50 95 60 110" fill="#58CC02" stroke="#3D9402" stroke-width="2"/>
+                  <path class="arm-right" d="M 150 110 Q 175 100 160 85 Q 150 95 140 110" fill="#58CC02" stroke="#3D9402" stroke-width="2"/>
+                  <!-- Feet -->
+                  <ellipse cx="80" cy="175" rx="15" ry="8" fill="#FF9600"/>
+                  <ellipse cx="120" cy="175" rx="15" ry="8" fill="#FF9600"/>
+                  <!-- Body -->
+                  <circle cx="100" cy="120" r="55" fill="url(#bodyGrad)" stroke="#3D9402" stroke-width="3"/>
+                  <!-- Belly (White patch) -->
+                  <path d="M 65 130 Q 100 100 135 130 Q 100 180 65 130 Z" fill="#F1F9EB"/>
+                  <!-- Eyes -->
+                  <g class="eyes">
+                    <circle class="eye-bg" cx="80" cy="95" r="16" fill="white" stroke="#3D9402" stroke-width="1.5"/>
+                    <circle class="pupil" cx="80" cy="95" r="7" fill="#1C1C1C"/>
+                    <circle cx="77" cy="92" r="3" fill="white"/>
+                    
+                    <circle class="eye-bg" cx="120" cy="95" r="16" fill="white" stroke="#3D9402" stroke-width="1.5"/>
+                    <circle class="pupil" cx="120" cy="95" r="7" fill="#1C1C1C"/>
+                    <circle cx="117" cy="92" r="3" fill="white"/>
+                  </g>
+                  <!-- Cheeks -->
+                  <circle cx="68" cy="112" r="6" fill="#FFA3A3" opacity="0.6"/>
+                  <circle cx="132" cy="112" r="6" fill="#FFA3A3" opacity="0.6"/>
+                  <!-- Mouth (Happy smile by default) -->
+                  <path class="mouth" d="M 90 120 Q 100 130 110 120" stroke="#1C1C1C" stroke-width="4" fill="none" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="mascot-speech">
+                <div class="speech-bubble">
+                  <p id="mascot-text">Salom! Bugun yangi so'zlarni yodlashga tayyormisiz? Qani, boshlaylik!</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Unit Selector Dashboard Panel -->
+            <div class="unit-selector-panel">
+              <span class="panel-icon">📂</span>
+              <div class="panel-content">
+                <label for="dashboard-unit-select">Mavzuni tanlang (Unit):</label>
+                <select id="dashboard-unit-select">
+                  <option value="all">Barcha Unitlar (1-4)</option>
+                  <option value="1">Unit 1</option>
+                  <option value="2">Unit 2</option>
+                  <option value="1,2" selected>Unit 1 & 2 (Tavsiya etiladi)</option>
+                  <option value="3">Unit 3</option>
+                  <option value="4">Unit 4</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- So'zlar Sandig'i Cabinet -->
+            <div class="cabinet-section">
+              <h3 class="section-title">So'zlar Sandig'i (Leitner Qutilari)</h3>
+              <p class="section-desc">Mavzuni (Unit) tanlang va takrorlash uchun qutilarni bosing. Har bir qutida faqat muddati kelgan so'zlar takrorlanadi.</p>
+              <div class="cabinet">
+                <div class="drawers" id="drawers">
+                  <!-- Rendered dynamically in app.js -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Game Modes Grid -->
+            <div class="game-modes-section">
+              <h3 class="section-title">Mashq turlari (Alohida o'yinlar)</h3>
+              <div class="game-modes-grid">
+                
+                <div class="game-mode-card" data-mode="flashcard">
+                  <span class="mode-icon">📖</span>
+                  <div class="mode-info">
+                    <h4>Kartochkalar</h4>
+                    <p>So'zlarni yodga solish va o'rganish (Flip card)</p>
+                  </div>
+                  <button class="btn btn-secondary btn-3d btn-mini-start" data-mode="flashcard">
+                    <span class="btn-content">Boshlash</span>
+                  </button>
+                </div>
+
+                <div class="game-mode-card" data-mode="choice">
+                  <span class="mode-icon">🎯</span>
+                  <div class="mode-info">
+                    <h4>Test (Ko'p tanlovli)</h4>
+                    <p>Variantlar ichidan to'g'ri tarjimani tanlang</p>
+                  </div>
+                  <button class="btn btn-secondary btn-3d btn-mini-start" data-mode="choice">
+                    <span class="btn-content">Boshlash</span>
+                  </button>
+                </div>
+
+                <div class="game-mode-card" data-mode="typing">
+                  <span class="mode-icon">⌨️</span>
+                  <div class="mode-info">
+                    <h4>Yozma mashq</h4>
+                    <p>So'z tarjimasini klaviaturada kiriting</p>
+                  </div>
+                  <button class="btn btn-secondary btn-3d btn-mini-start" data-mode="typing">
+                    <span class="btn-content">Boshlash</span>
+                  </button>
+                </div>
+
+                <div class="game-mode-card" data-mode="tiles">
+                  <span class="mode-icon">🧩</span>
+                  <div class="mode-info">
+                    <h4>Harf terish</h4>
+                    <p>Harflardan to'g'ri so'zni yig'ing</p>
+                  </div>
+                  <button class="btn btn-secondary btn-3d btn-mini-start" data-mode="tiles">
+                    <span class="btn-content">Boshlash</span>
+                  </button>
+                </div>
+
+                <div class="game-mode-card" data-mode="matching">
+                  <span class="mode-icon">🔗</span>
+                  <div class="mode-info">
+                    <h4>Juftliklarni topish</h4>
+                    <p>Inglizcha va o'zbekcha so'zlarni moslang</p>
+                  </div>
+                  <button class="btn btn-secondary btn-3d btn-mini-start" data-mode="matching">
+                    <span class="btn-content">Boshlash</span>
+                  </button>
+                </div>
+
+                <div class="game-mode-card" data-mode="blank">
+                  <span class="mode-icon">✍️</span>
+                  <div class="mode-info">
+                    <h4>Gap to'ldirish</h4>
+                    <p>Misol gaplardagi bo'sh joyni to'ldiring</p>
+                  </div>
+                  <button class="btn btn-secondary btn-3d btn-mini-start" data-mode="blank">
+                    <span class="btn-content">Boshlash</span>
+                  </button>
+                </div>
+
+                <div class="game-mode-card" data-mode="listen">
+                  <span class="mode-icon">🎧</span>
+                  <div class="mode-info">
+                    <h4>Tinglab yozish</h4>
+                    <p>Eshitilgan so'zni to'g'ri yozing</p>
+                  </div>
+                  <button class="btn btn-secondary btn-3d btn-mini-start" data-mode="listen">
+                    <span class="btn-content">Boshlash</span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Quick Stats & Guide -->
+          <div class="dash-sidebar">
+            <!-- Quick Stats Summary -->
+            <div class="quick-stats-card" style="margin-bottom: 24px;">
+              <div class="stat-box">
+                <span class="stat-icon">🔥</span>
+                <span class="stat-number" id="stats-streak">0</span>
+                <span class="stat-text">Kunlik Streak</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-icon">⭐</span>
+                <span class="stat-number" id="stats-xp">0</span>
+                <span class="stat-text">Jami XP</span>
+              </div>
+            </div>
+
+            <!-- Vocabulary Stats -->
+            <div class="quick-stats-card" style="margin-bottom: 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+              <div class="stat-box" style="padding: 10px 4px;">
+                <span class="stat-icon" style="font-size: 18px;">📚</span>
+                <span class="stat-number" id="stat-total" style="font-size: 16px;">0</span>
+                <span class="stat-text" style="font-size: 9px;">Jami so'z</span>
+              </div>
+              <div class="stat-box" style="padding: 10px 4px;">
+                <span class="stat-icon" style="font-size: 18px;">📅</span>
+                <span class="stat-number" id="stat-due" style="font-size: 16px;">0</span>
+                <span class="stat-text" style="font-size: 9px;">Kutilmoqda</span>
+              </div>
+              <div class="stat-box" style="padding: 10px 4px;">
+                <span class="stat-icon" style="font-size: 18px;">🏆</span>
+                <span class="stat-number" id="stat-mastered" style="font-size: 16px;">0</span>
+                <span class="stat-text" style="font-size: 9px;">O'zlashtirildi</span>
+              </div>
+            </div>
+
+            <!-- Leitner System Guide -->
+            <div class="box-stats-card">
+              <h3>Oraliqli takrorlash qoidalari</h3>
+              <p class="stats-desc" style="margin-bottom: 12px;">Har bir so'z 5 ta "qutida" saqlanadi. So'zlarni o'zlashtirish orqali ularni yuqori qutilarga o'tkazing:</p>
+              <ul style="list-style: none; font-size: 13px; font-weight: 700; color: var(--text-muted); display: flex; flex-direction: column; gap: 8px; padding-left: 0;">
+                <li>📅 <strong>1-quti</strong> — Har kuni takrorlanadi</li>
+                <li>📅 <strong>2-quti</strong> — 2 kunda bir takrorlanadi</li>
+                <li>📅 <strong>3-quti</strong> — 4 kunda bir takrorlanadi</li>
+                <li>📅 <strong>4-quti</strong> — 8 kunda bir takrorlanadi</li>
+                <li>📅 <strong>5-quti</strong> — 16 kunda bir takrorlanadi</li>
+              </ul>
+              <p class="stats-desc" style="margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 10px; font-weight: 700;">
+                🟢 <strong>Bildim</strong> — so'z keyingi qutiga o'tadi.<br>
+                🔴 <strong>Bilmadim</strong> — so'z bitta orqadagi qutiga qaytadi.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- ================= VOCABULARY PAGE ================= -->
+      <section id="vocab-page" class="page">
+        <div class="vocab-header">
+          <h2>Mening Lug'atim</h2>
+          <button class="btn btn-primary btn-3d" id="btn-open-add-modal">
+            <span class="btn-content">+ Yangi so'z qo'shish</span>
+          </button>
+        </div>
+
+        <!-- Filters and Search -->
+        <div class="vocab-controls">
+          <div class="search-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-input" placeholder="So'z yoki tarjimani qidirish...">
+          </div>
+          <div class="filter-wrapper">
+            <label for="box-filter">Quti bo'yicha:</label>
+            <select id="box-filter">
+              <option value="all">Hammasi</option>
+              <option value="1">1-quti (Yangi/Qiyin)</option>
+              <option value="2">2-quti</option>
+              <option value="3">3-quti</option>
+              <option value="4">4-quti</option>
+              <option value="5">5-quti (O'zlashtirilgan)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Vocabulary Grid List -->
+        <div class="vocab-grid" id="vocab-grid-list">
+          <!-- Dynamic words will be loaded here -->
+        </div>
+
+        <!-- Add Word Modal Dialog -->
+        <div class="modal-overlay" id="add-word-modal">
+          <div class="modal-card">
+            <div class="modal-header">
+              <h3>Yangi so'z qo'shish</h3>
+              <button class="btn-close-modal" id="btn-close-modal">×</button>
+            </div>
+            <form id="add-word-form">
+              <div class="form-group">
+                <label for="word-en">Inglizcha so'z *</label>
+                <input type="text" id="word-en" required placeholder="Masalan: challenge">
+              </div>
+              <div class="form-group">
+                <label for="word-uz">O'zbekcha tarjimasi *</label>
+                <input type="text" id="word-uz" required placeholder="Masalan: qiyinchilik, chaqiriq">
+              </div>
+              <div class="form-group">
+                <label for="word-example">Misol jumla (ixtiyoriy)</label>
+                <textarea id="word-example" rows="2" placeholder="Masalan: Life is full of challenges."></textarea>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-3d" id="btn-cancel-modal">
+                  <span class="btn-content">Bekor qilish</span>
+                </button>
+                <button type="submit" class="btn btn-primary btn-3d">
+                  <span class="btn-content">Qo'shish</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ================= EXERCISE PAGE ================= -->
+      <section id="exercise-page" class="page full-screen-page">
+        <!-- Exercise Header -->
+        <div class="exercise-header">
+          <button class="btn-exit-exercise" id="btn-exit-exercise">×</button>
+          
+          <div class="progress-bar-container">
+            <div class="progress-bar-inner" id="exercise-progress" style="width: 10%"></div>
+          </div>
+
+          <div class="hearts-container" id="hearts-container">
+            <!-- Dynamic Hearts represented as SVG -->
+            <span class="heart active">❤️</span>
+            <span class="heart active">❤️</span>
+            <span class="heart active">❤️</span>
+            <span class="heart active">❤️</span>
+            <span class="heart active">❤️</span>
+          </div>
+
+          <div class="exercise-xp-display">
+            <span class="xp-star">⭐</span>
+            <span id="exercise-xp-count">0</span> XP
+          </div>
+        </div>
+
+        <!-- Cabinet Mini Indicators on Exercise Page -->
+        <div class="exercise-mini-cabinet" id="exercise-mini-cabinet" style="display: none;">
+          <div class="mini-box" data-box="1">1</div>
+          <div class="mini-box" data-box="2">2</div>
+          <div class="mini-box" data-box="3">3</div>
+          <div class="mini-box" data-box="4">4</div>
+          <div class="mini-box" data-box="5">5</div>
+        </div>
+
+        <!-- Exercise Content Wrapper -->
+        <div class="exercise-body">
+          <div class="question-container" id="question-wrapper">
+            <!-- Dynamic game cards loaded by JS -->
+          </div>
+        </div>
+
+        <!-- Exercise Footer Action Banner -->
+        <div class="exercise-footer" id="exercise-footer">
+          <div class="footer-message-area" id="footer-message-area">
+            <!-- Correct/Wrong notification text dynamically loaded -->
+          </div>
+          <button class="btn btn-footer btn-3d" id="btn-footer-action" disabled>
+            <span class="btn-content">Tekshirish</span>
+          </button>
+
+          <!-- Flashcard Specific Footer Buttons -->
+          <div class="flashcard-footer-buttons" id="flashcard-footer-buttons" style="display: none; width: 100%; gap: 16px;">
+            <button class="btn btn-danger btn-3d" id="btn-flashcard-no" style="flex: 1;">
+              <span class="btn-content">🔴 Bilmadim</span>
+            </button>
+            <button class="btn btn-primary btn-3d" id="btn-flashcard-yes" style="flex: 1;">
+              <span class="btn-content">🟢 Bildim</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ================= SUMMARY PAGE ================= -->
+      <section id="summary-page" class="page">
+        <div class="summary-wrapper">
+          
+          <div class="confetti-container" id="confetti-container"></div>
+
+          <div class="mascot-card summary-mascot-card">
+            <!-- Mascot SVG (Happy/Celebration State) -->
+            <svg class="mascot-svg celebrating" viewBox="0 0 200 200" width="160" height="160">
+              <defs>
+                <linearGradient id="bodyGradCeleb" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#7EFC1A" />
+                  <stop offset="100%" stop-color="#58CC02" />
+                </linearGradient>
+              </defs>
+              <ellipse cx="100" cy="180" rx="60" ry="10" fill="rgba(0,0,0,0.1)"/>
+              
+              <!-- Celebrating wings raised -->
+              <path class="arm-left celeb-left" d="M 50 110 Q 20 60 35 55 Q 50 65 60 110" fill="#58CC02" stroke="#3D9402" stroke-width="2"/>
+              <path class="arm-right celeb-right" d="M 150 110 Q 180 60 165 55 Q 150 65 140 110" fill="#58CC02" stroke="#3D9402" stroke-width="2"/>
+              
+              <ellipse cx="78" cy="172" rx="15" ry="10" fill="#FF9600" transform="rotate(-10 78 172)"/>
+              <ellipse cx="122" cy="172" rx="15" ry="10" fill="#FF9600" transform="rotate(10 122 172)"/>
+              <circle cx="100" cy="120" r="55" fill="url(#bodyGradCeleb)" stroke="#3D9402" stroke-width="3"/>
+              <path d="M 65 130 Q 100 100 135 130 Q 100 180 65 130 Z" fill="#F1F9EB"/>
+              
+              <g class="eyes happy-eyes">
+                <!-- Curved happy eyes -->
+                <path d="M 68 95 Q 80 85 92 95" stroke="#1C1C1C" stroke-width="5" fill="none" stroke-linecap="round"/>
+                <path d="M 108 95 Q 120 85 132 95" stroke="#1C1C1C" stroke-width="5" fill="none" stroke-linecap="round"/>
+              </g>
+              
+              <circle cx="68" cy="112" r="6" fill="#FFA3A3" opacity="0.8"/>
+              <circle cx="132" cy="112" r="6" fill="#FFA3A3" opacity="0.8"/>
+              <!-- Wide happy mouth -->
+              <path class="mouth" d="M 88 120 Q 100 140 112 120 Z" fill="#FF4B4B" stroke="#1C1C1C" stroke-width="3"/>
+            </svg>
+            <h2 class="summary-title" id="summary-title-text">Ajoyib natija!</h2>
+            <p class="summary-subtitle" id="summary-motivation-text">Bugungi mashg'ulotni a'lo darajada yakunladingiz.</p>
+          </div>
+
+          <!-- Score Cards Grid -->
+          <div class="summary-stats-grid">
+            <div class="summary-stat-card">
+              <span class="sum-icon">⭐</span>
+              <span class="sum-value" id="summary-xp">+0 XP</span>
+              <span class="sum-label">Tajriba ochkosi</span>
+            </div>
+            
+            <div class="summary-stat-card">
+              <span class="sum-icon">🎯</span>
+              <span class="sum-value" id="summary-accuracy">0%</span>
+              <span class="sum-label">Aniqlik darajasi</span>
+            </div>
+
+            <div class="summary-stat-card">
+              <span class="sum-icon">🔥</span>
+              <span class="sum-value" id="summary-streak">0 kun</span>
+              <span class="sum-label">Kunlik Streak</span>
+            </div>
+          </div>
+
+          <!-- Bottom Action -->
+          <div class="summary-actions">
+            <button class="btn btn-primary btn-3d btn-block" id="btn-summary-done">
+              <span class="btn-content">Darsni tugatish</span>
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
