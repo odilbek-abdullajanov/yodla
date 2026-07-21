@@ -86,7 +86,51 @@ const defaultWords = [
   { en: "shake", uz: "silkitmoq", example: "Shake the bottle well before opening." },
   { en: "spread", uz: "tarqalmoq", example: "The fire spread quickly through the forest." },
   { en: "stroll", uz: "sayrga chiqmoq", example: "We strolled along the river bank." },
-  { en: "village", uz: "qishloq", example: "He lives in a small mountain village." }
+  { en: "village", uz: "qishloq", example: "He lives in a small mountain village." },
+
+  // Unit 5
+  { en: "aware", uz: "xabardor", example: "He was not aware of the danger." },
+  { en: "badly", uz: "yomon", example: "The team played badly and lost the game." },
+  { en: "belong", uz: "tegishli bo'lmoq", example: "This book belongs to me." },
+  { en: "continue", uz: "davom etmoq", example: "Please continue reading the story." },
+  { en: "error", uz: "xato", example: "I made a spelling error in my essay." },
+  { en: "experience", uz: "tajriba", example: "She has three years of work experience." },
+  { en: "field", uz: "maydon", example: "The cows are grazing in the green field." },
+  { en: "hurt", uz: "jarohat olmoq", example: "He fell and hurt his knee." },
+  { en: "judgment", uz: "hukm, baho", example: "Trust your own judgment when making decisions." },
+  { en: "likely", uz: "ehtimol", example: "It is likely to rain this afternoon." },
+  { en: "normal", uz: "oddiy", example: "It is normal to feel nervous before a test." },
+  { en: "rare", uz: "noyob", example: "The museum exhibits rare ancient coins." },
+  { en: "relax", uz: "rohatlanmoq", example: "I like to relax and watch a movie on weekends." },
+  { en: "request", uz: "so'ramoq", example: "She requested help with her project." },
+  { en: "reside", uz: "yashamoq", example: "Many students reside in college dormitories." },
+  { en: "result", uz: "natija", example: "What was the result of the experiment?" },
+  { en: "roll", uz: "dumalamoq", example: "The ball began to roll down the hill." },
+  { en: "since", uz: "chunki", example: "Since it is raining, we should stay indoors." },
+  { en: "visible", uz: "ko'rinadigan", example: "The stars are visible on a clear night." },
+  { en: "wild", uz: "yovvoyi", example: "We saw wild animals during the safari tour." },
+
+  // Unit 6
+  { en: "advantage", uz: "afzallik", example: "Knowing English is a great advantage." },
+  { en: "cause", uz: "sababi", example: "The heavy rain was the cause of the flood." },
+  { en: "choice", uz: "tanlov", example: "You have a choice between tea and coffee." },
+  { en: "community", uz: "jamoa", example: "We live in a friendly local community." },
+  { en: "dead", uz: "o'lik", example: "The plants are dead because we forgot to water them." },
+  { en: "distance", uz: "masofa", example: "The distance between the two cities is 100 kilometers." },
+  { en: "escape", uz: "qochmoq", example: "The rabbit managed to escape from the cage." },
+  { en: "face", uz: "yuz", example: "She had a happy smile on her face." },
+  { en: "follow", uz: "amal qilmoq, ortidan bormoq", example: "Please follow the instructions carefully." },
+  { en: "fright", uz: "qo'rquv", example: "The loud noise gave her a sudden fright." },
+  { en: "ghost", uz: "arvoh", example: "Do you believe in ghosts?" },
+  { en: "individual", uz: "shaxs", example: "Each individual has a unique personality." },
+  { en: "pet", uz: "uy hayvoni", example: "Do you have any pets, like a cat or dog?" },
+  { en: "reach", uz: "erishmoq, yetib bormoq", example: "We hope to reach our destination before dark." },
+  { en: "return", uz: "qaytmoq", example: "He promised to return the borrowed book tomorrow." },
+  { en: "survive", uz: "omon qolmoq", example: "Some desert plants can survive without water for a long time." },
+  { en: "upset", uz: "xafa", example: "She was upset about losing her favorite keys." },
+  { en: "voice", uz: "ovoz", example: "She has a beautiful singing voice." },
+  { en: "weather", uz: "ob-havo", example: "The weather is very warm and sunny today." },
+  { en: "wise", uz: "dono", example: "It was a wise decision to study hard for the exam." }
 ];
 
 // ================= WEB AUDIO API SOUND SYSTEM =================
@@ -329,8 +373,34 @@ async function loadData() {
   const localLastActive = localStorage.getItem("yodla_last_active_date");
 
   if (localWords && Array.isArray(localWords) && localWords.length > 0) {
-    // Map units and legacy nextReview property if missing
-    state.words = localWords.map((w, idx) => {
+    // Merge missing defaults for users who already have local data
+    const existingEn = new Set(localWords.map(w => w.en.toLowerCase().trim()));
+    const missingDefaults = defaultWords.filter(dw => !existingEn.has(dw.en.toLowerCase().trim()));
+    
+    const newWordsToAdd = missingDefaults.map((item, idx) => {
+      const globalIdx = defaultWords.findIndex(dw => dw.en.toLowerCase().trim() === item.en.toLowerCase().trim());
+      let unitNum = 1;
+      if (globalIdx >= 20 && globalIdx < 40) unitNum = 2;
+      else if (globalIdx >= 40 && globalIdx < 60) unitNum = 3;
+      else if (globalIdx >= 60 && globalIdx < 80) unitNum = 4;
+      else if (globalIdx >= 80 && globalIdx < 100) unitNum = 5;
+      else if (globalIdx >= 100) unitNum = 6;
+      
+      return {
+        id: "word_new_" + globalIdx + "_" + Date.now(),
+        en: item.en.trim(),
+        uz: item.uz.trim(),
+        example: item.example.trim(),
+        box: 1,
+        unit: unitNum,
+        nextReviewDate: new Date().toISOString(),
+        nextReview: new Date().toISOString()
+      };
+    });
+    
+    const combinedWords = [...localWords, ...newWordsToAdd];
+    
+    state.words = combinedWords.map((w, idx) => {
       if (!w.id) w.id = "word_" + idx + "_" + Date.now();
       if (!w.box) w.box = 1;
       if (!w.nextReviewDate) w.nextReviewDate = w.nextReview || new Date().toISOString();
@@ -342,19 +412,27 @@ async function loadData() {
         if (defaultIdx < 20) w.unit = 1;
         else if (defaultIdx < 40) w.unit = 2;
         else if (defaultIdx < 60) w.unit = 3;
-        else w.unit = 4;
+        else if (defaultIdx < 80) w.unit = 4;
+        else if (defaultIdx < 100) w.unit = 5;
+        else w.unit = 6;
       } else {
         if (!w.unit) w.unit = 1;
       }
       return w;
     });
+
+    if (newWordsToAdd.length > 0) {
+      await saveData();
+    }
   } else {
     // Populate with defaults and map unit numbers based on index (20 words per unit)
     state.words = defaultWords.map((item, idx) => {
       let unitNum = 1;
       if (idx >= 20 && idx < 40) unitNum = 2;
       else if (idx >= 40 && idx < 60) unitNum = 3;
-      else if (idx >= 60) unitNum = 4;
+      else if (idx >= 60 && idx < 80) unitNum = 4;
+      else if (idx >= 80 && idx < 100) unitNum = 5;
+      else if (idx >= 100) unitNum = 6;
 
       return {
         id: "word_" + idx + "_" + Date.now(),
