@@ -130,7 +130,19 @@ const defaultWords = [
   { en: "upset", uz: "xafa", example: "She was upset about losing her favorite keys." },
   { en: "voice", uz: "ovoz", example: "She has a beautiful singing voice." },
   { en: "weather", uz: "ob-havo", example: "The weather is very warm and sunny today." },
-  { en: "wise", uz: "dono", example: "It was a wise decision to study hard for the exam." }
+  { en: "wise", uz: "dono", example: "It was a wise decision to study hard for the exam." },
+
+  // Unit 7 - Sinonimlar (Synonyms)
+  { en: "small, little", uz: "kichik", example: "A mouse is a small / little animal.", synonyms: ["small", "little"] },
+  { en: "big, large", uz: "katta", example: "An elephant is a big / large animal.", synonyms: ["big", "large"] },
+  { en: "happy, glad", uz: "xursand", example: "I am happy / glad to see you.", synonyms: ["happy", "glad"] },
+  { en: "sad, unhappy", uz: "xafa", example: "She was sad / unhappy about the bad news.", synonyms: ["sad", "unhappy"] },
+  { en: "fast, quick", uz: "tez", example: "Cheetahs are fast / quick runners.", synonyms: ["fast", "quick"] },
+  { en: "slow, unhurried", uz: "sekin", example: "Turtles move at a slow / unhurried pace.", synonyms: ["slow", "unhurried"] },
+  { en: "good, nice", uz: "yaxshi", example: "Have a good / nice day!", synonyms: ["good", "nice"] },
+  { en: "bad, poor", uz: "yomon", example: "Bad / poor weather spoiled our weekend.", synonyms: ["bad", "poor"] },
+  { en: "easy, simple", uz: "oson", example: "This question is very easy / simple.", synonyms: ["easy", "simple"] },
+  { en: "difficult, hard", uz: "qiyin", example: "Learning a language can be difficult / hard.", synonyms: ["difficult", "hard"] }
 ];
 
 // ================= WEB AUDIO API SOUND SYSTEM =================
@@ -384,13 +396,15 @@ async function loadData() {
       else if (globalIdx >= 40 && globalIdx < 60) unitNum = 3;
       else if (globalIdx >= 60 && globalIdx < 80) unitNum = 4;
       else if (globalIdx >= 80 && globalIdx < 100) unitNum = 5;
-      else if (globalIdx >= 100) unitNum = 6;
+      else if (globalIdx >= 100 && globalIdx < 120) unitNum = 6;
+      else if (globalIdx >= 120) unitNum = 7;
       
       return {
         id: "word_new_" + globalIdx + "_" + Date.now(),
         en: item.en.trim(),
         uz: item.uz.trim(),
         example: item.example.trim(),
+        synonyms: item.synonyms ? [...item.synonyms] : null,
         box: 1,
         unit: unitNum,
         nextReviewDate: new Date().toISOString(),
@@ -414,7 +428,12 @@ async function loadData() {
         else if (defaultIdx < 60) w.unit = 3;
         else if (defaultIdx < 80) w.unit = 4;
         else if (defaultIdx < 100) w.unit = 5;
-        else w.unit = 6;
+        else if (defaultIdx < 120) w.unit = 6;
+        else w.unit = 7;
+
+        if (defaultWords[defaultIdx].synonyms) {
+          w.synonyms = defaultWords[defaultIdx].synonyms;
+        }
       } else {
         if (!w.unit) w.unit = 1;
       }
@@ -432,13 +451,15 @@ async function loadData() {
       else if (idx >= 40 && idx < 60) unitNum = 3;
       else if (idx >= 60 && idx < 80) unitNum = 4;
       else if (idx >= 80 && idx < 100) unitNum = 5;
-      else if (idx >= 100) unitNum = 6;
+      else if (idx >= 100 && idx < 120) unitNum = 6;
+      else if (idx >= 120) unitNum = 7;
 
       return {
         id: "word_" + idx + "_" + Date.now(),
         en: item.en.trim(),
         uz: item.uz.trim(),
         example: item.example.trim(),
+        synonyms: item.synonyms ? [...item.synonyms] : null,
         box: 1,
         unit: unitNum,
         nextReviewDate: new Date().toISOString(),
@@ -734,11 +755,14 @@ function renderVocabList() {
       levelDotsHTML += `<span class="level-dot ${i <= word.box ? 'active' : ''}"></span>`;
     }
 
+    const isSynonym = Array.isArray(word.synonyms) && word.synonyms.length > 1;
+    const badgeHTML = isSynonym ? `<span style="background: rgba(28, 176, 246, 0.15); color: var(--secondary); font-size: 11px; padding: 2px 8px; border-radius: 8px; font-weight: 800; margin-left: 6px;">✨ Sinonimlar</span>` : '';
+
     card.innerHTML = `
       <div>
         <div class="card-top">
           <div class="card-en-word" data-en="${word.en}">
-            <span>${word.en}</span>
+            <span>${word.en}</span> ${badgeHTML}
             <button class="speak-mini-btn" title="Talaffuz qilish">🔊</button>
           </div>
           <button class="btn-delete-word" data-id="${word.id}" title="So'zni o'chirish">🗑️</button>
@@ -968,34 +992,66 @@ function generateQuestionsForWords(wordsList, mode) {
       type: chosenType
     };
 
+    const hasSynonyms = Array.isArray(word.synonyms) && word.synonyms.length > 1;
+
     if (chosenType === 'flashcard') {
-      questionObj.promptText = "So'zni eslang va aylantirib tekshiring:";
+      questionObj.promptText = hasSynonyms ? "So'zni eslang va aylantirib tekshiring (Sinonimlar):" : "So'zni eslang va aylantirib tekshiring:";
     }
     else if (chosenType === 1) {
       // Multiple Choice EN -> UZ
-      questionObj.promptText = `"${word.en}" so'zining to'g'ri tarjimasini tanlang:`;
+      let promptEn = word.en;
+      if (hasSynonyms) {
+        const synVar = idx % 3;
+        if (synVar === 0) promptEn = word.synonyms.join(' / ');
+        else if (synVar === 1) promptEn = word.synonyms[0];
+        else promptEn = word.synonyms[1];
+      }
+      questionObj.promptText = `"${promptEn}" so'zining to'g'ri tarjimasini tanlang:`;
       questionObj.correctAnswer = word.uz;
       questionObj.options = generateOptions(word.uz, 'uz', wordsList);
     } 
     else if (chosenType === 2) {
       // Multiple Choice UZ -> EN
-      questionObj.promptText = `"${word.uz}" so'zining to'g'ri inglizcha muqobilini tanlang:`;
-      questionObj.correctAnswer = word.en;
-      questionObj.options = generateOptions(word.en, 'en', wordsList);
+      if (hasSynonyms) {
+        const synVar = idx % 2;
+        if (synVar === 0) {
+          questionObj.promptText = `"${word.uz}" so'zining ikkala inglizcha sinonimini tanlang:`;
+          questionObj.correctAnswer = word.synonyms.join(', ');
+        } else {
+          questionObj.promptText = `"${word.uz}" so'zining to'g'ri inglizcha sinonimini tanlang:`;
+          questionObj.correctAnswer = word.synonyms[idx % word.synonyms.length];
+        }
+      } else {
+        questionObj.promptText = `"${word.uz}" so'zining to'g'ri inglizcha muqobilini tanlang:`;
+        questionObj.correctAnswer = word.en;
+      }
+      questionObj.options = generateOptions(questionObj.correctAnswer, 'en', wordsList);
     }
     else if (chosenType === 3) {
       // Typing UZ -> EN
-      questionObj.promptText = `Ushbu so'zning inglizcha tarjimasini yozing:`;
-      questionObj.targetWord = word.uz;
-      questionObj.correctAnswer = word.en;
+      if (hasSynonyms) {
+        questionObj.promptText = `"${word.uz}" so'zining inglizcha sinonimini (${word.synonyms.join(' / ')}) yozing:`;
+        questionObj.targetWord = word.uz;
+        questionObj.correctAnswer = word.synonyms.join(', ');
+      } else {
+        questionObj.promptText = `Ushbu so'zning inglizcha tarjimasini yozing:`;
+        questionObj.targetWord = word.uz;
+        questionObj.correctAnswer = word.en;
+      }
     }
     else if (chosenType === 4) {
       // Letter Tiles UZ -> EN
-      questionObj.promptText = `Harflarni to'g'ri tartibda terib, so'zni hosil qiling:`;
+      let tileWord = word.en;
+      if (hasSynonyms) {
+        tileWord = word.synonyms[idx % word.synonyms.length];
+        questionObj.promptText = `"${word.uz}" (${tileWord}) harflarini to'g'ri tartibda terib, so'zni hosil qiling:`;
+      } else {
+        questionObj.promptText = `Harflarni to'g'ri tartibda terib, so'zni hosil qiling:`;
+      }
       questionObj.targetWord = word.uz;
-      questionObj.correctAnswer = word.en;
+      questionObj.correctAnswer = tileWord;
       // Scramble letters
-      let letterList = word.en.toLowerCase().replace(/[^a-z']/g, '').split('');
+      let letterList = tileWord.toLowerCase().replace(/[^a-z']/g, '').split('');
       questionObj.tiles = shuffleArray(letterList);
     }
     else if (chosenType === 5) {
@@ -1022,15 +1078,18 @@ function generateQuestionsForWords(wordsList, mode) {
     }
     else if (chosenType === 6) {
       // Listen and Type EN
+      let listenWord = word.en;
+      if (hasSynonyms) {
+        listenWord = word.synonyms[idx % word.synonyms.length];
+      }
       questionObj.promptText = "Eshitgan so'zingizni yozing:";
-      questionObj.correctAnswer = word.en;
+      questionObj.correctAnswer = listenWord;
     }
     else if (chosenType === 7) {
       // Fill in the Blank
       questionObj.promptText = "Gapdagi bo'shliqni to'ldiring:";
       
       // Replace the word in the example sentence with a blank.
-      // Make it case-insensitive regex
       const escapedWord = word.en.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
       const regex = new RegExp(`\\b${escapedWord}\\b`, 'gi');
       
@@ -1040,8 +1099,13 @@ function generateQuestionsForWords(wordsList, mode) {
     }
     else if (chosenType === 8) {
       // Typing EN -> UZ
-      questionObj.promptText = `Ushbu so'zning o'zbekcha tarjimasini yozing:`;
-      questionObj.targetWord = word.en;
+      let promptEn = word.en;
+      if (hasSynonyms) {
+        const synVar = idx % 2;
+        promptEn = (synVar === 0) ? word.synonyms.join(' / ') : word.synonyms[idx % word.synonyms.length];
+      }
+      questionObj.promptText = `"${promptEn}" so'zining o'zbekcha tarjimasini yozing:`;
+      questionObj.targetWord = promptEn;
       questionObj.correctAnswer = word.uz;
     }
 
@@ -1573,6 +1637,27 @@ function normalizeUzbek(str) {
     .replace(/\s+/g, ' ');
 }
 
+// Normalized compare for English text
+function normalizeEnglish(str) {
+  return str.toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ');
+}
+
+function isEnglishMatch(userTyped, correctAnswer, wordObj) {
+  const uNorm = normalizeEnglish(userTyped);
+  const cNorm = normalizeEnglish(correctAnswer);
+  if (uNorm === cNorm) return true;
+  
+  if (wordObj && wordObj.synonyms && Array.isArray(wordObj.synonyms)) {
+    const synNorms = wordObj.synonyms.map(s => normalizeEnglish(s));
+    if (synNorms.includes(uNorm)) return true;
+    if (synNorms.every(s => uNorm.includes(s))) return true;
+  }
+  return false;
+}
+
 function checkAnswer() {
   const question = session.questions[session.currentIndex];
   let isCorrect = false;
@@ -1590,7 +1675,7 @@ function checkAnswer() {
 
     if (question.type === 6 || question.type === 3) {
       // English typing checks
-      isCorrect = (userTyped === correctVal);
+      isCorrect = isEnglishMatch(userTyped, correctVal, question.word);
       correctExplanation = question.correctAnswer;
     } else {
       // Uzbek typing: can match multiple definitions separated by commas
