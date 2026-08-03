@@ -1,31 +1,30 @@
 <!DOCTYPE html>
 <html lang="uz">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yodla — Duolingo Uslubida Ingliz Tili Lug'ati</title>
-  <!-- Google Fonts: Nunito -->
+  <title>Yodla — Ingliz Tili Lug'ati</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-  <!-- Web App Wrapper -->
   <div class="app-container">
 
-    <!-- Sidebar Navigation (Desktop) / Bottom Bar (Mobile) -->
+    <!-- Sidebar Navigation -->
     <nav class="sidebar" id="main-nav">
       <div class="brand">
-        <!-- Mascot Logo Mini -->
-        <svg class="logo-svg" viewBox="0 0 100 100" width="40" height="40">
-          <circle cx="50" cy="50" r="45" fill="#58CC02"/>
-          <circle cx="35" cy="45" r="10" fill="white"/>
-          <circle cx="35" cy="45" r="5" fill="black"/>
-          <circle cx="65" cy="45" r="10" fill="white"/>
-          <circle cx="65" cy="45" r="5" fill="black"/>
-          <path d="M 40 65 Q 50 75 60 65" stroke="white" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <svg class="logo-svg" viewBox="0 0 100 100" width="36" height="36">
+          <rect x="5" y="5" width="90" height="90" rx="22" fill="#58CC02" />
+          <path d="M25 38 Q25 33 30 33 L50 37 L70 33 Q75 33 75 38 L75 67 Q75 72 70 72 L50 68 L30 72 Q25 72 25 67 Z"
+            fill="white" />
+          <line x1="50" y1="37" x2="50" y2="68" stroke="#58CC02" stroke-width="2.5" stroke-linecap="round" />
+          <path d="M75 18 L77 24 L83 26 L77 28 L75 34 L73 28 L67 26 L73 24 Z" fill="#FFC800" />
         </svg>
         <span class="brand-name">Yodla</span>
       </div>
@@ -33,13 +32,21 @@
       <ul class="nav-links">
         <li class="nav-item active" data-target="dashboard-page">
           <a href="#">
-            <span class="icon">🏠</span>
+            <span class="icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg></span>
             <span class="text">Bosh sahifa</span>
           </a>
         </li>
         <li class="nav-item" data-target="vocab-page">
           <a href="#">
-            <span class="icon">📖</span>
+            <span class="icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+              </svg></span>
             <span class="text">Lug'at</span>
           </a>
         </li>
@@ -47,286 +54,333 @@
 
       <div class="nav-footer">
         <div class="sidebar-stat">
-          <span class="stat-icon">⭐</span>
-          <span class="stat-label">Jami XP:</span>
+          <span class="stat-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="currentColor">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg></span>
+          <span class="stat-label">XP:</span>
           <span class="stat-value" id="nav-xp">0</span>
         </div>
         <div class="sidebar-stat">
-          <span class="stat-icon">🔥</span>
+          <span class="stat-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38.5-2 1-3 1.072-2.144 2.5-2.5 3-2.5 0 0 .5 0 1 .5 0 0 .5 1 .5 2 0 0 .5 1 1 1.5s.5 1.5.5 2.5a5 5 0 0 1-5 5c-1.5 0-2.5-.5-3-1-.5-.5-1-1.5-1-2.5z" />
+            </svg></span>
           <span class="stat-label">Streak:</span>
           <span class="stat-value" id="nav-streak">0 kun</span>
         </div>
       </div>
     </nav>
 
-    <!-- Main Content Area -->
+    <!-- Main Content -->
     <main class="main-content">
 
       <!-- ================= DASHBOARD PAGE ================= -->
       <section id="dashboard-page" class="page active">
         <div class="dashboard-grid">
-          
-          <!-- Left Column: Primary Actions -->
+
+          <!-- Left Column -->
           <div class="dash-main">
-            <!-- Daily Goal Card with Mascot -->
-            <div class="mascot-card">
-              <div class="mascot-container" id="dashboard-mascot">
-                <!-- Mascot SVG (Neutral State) -->
-                <svg class="mascot-svg neutral" viewBox="0 0 200 200" width="120" height="120">
-                  <defs>
-                    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#78E117" />
-                      <stop offset="100%" stop-color="#58CC02" />
-                    </linearGradient>
-                  </defs>
-                  <!-- Shadow -->
-                  <ellipse cx="100" cy="180" rx="60" ry="10" fill="rgba(0,0,0,0.1)"/>
-                  <!-- Wings/Arms -->
-                  <path class="arm-left" d="M 50 110 Q 25 100 40 85 Q 50 95 60 110" fill="#58CC02" stroke="#3D9402" stroke-width="2"/>
-                  <path class="arm-right" d="M 150 110 Q 175 100 160 85 Q 150 95 140 110" fill="#58CC02" stroke="#3D9402" stroke-width="2"/>
-                  <!-- Feet -->
-                  <ellipse cx="80" cy="175" rx="15" ry="8" fill="#FF9600"/>
-                  <ellipse cx="120" cy="175" rx="15" ry="8" fill="#FF9600"/>
-                  <!-- Body -->
-                  <circle cx="100" cy="120" r="55" fill="url(#bodyGrad)" stroke="#3D9402" stroke-width="3"/>
-                  <!-- Belly (White patch) -->
-                  <path d="M 65 130 Q 100 100 135 130 Q 100 180 65 130 Z" fill="#F1F9EB"/>
-                  <!-- Eyes -->
-                  <g class="eyes">
-                    <circle class="eye-bg" cx="80" cy="95" r="16" fill="white" stroke="#3D9402" stroke-width="1.5"/>
-                    <circle class="pupil" cx="80" cy="95" r="7" fill="#1C1C1C"/>
-                    <circle cx="77" cy="92" r="3" fill="white"/>
-                    
-                    <circle class="eye-bg" cx="120" cy="95" r="16" fill="white" stroke="#3D9402" stroke-width="1.5"/>
-                    <circle class="pupil" cx="120" cy="95" r="7" fill="#1C1C1C"/>
-                    <circle cx="117" cy="92" r="3" fill="white"/>
-                  </g>
-                  <!-- Cheeks -->
-                  <circle cx="68" cy="112" r="6" fill="#FFA3A3" opacity="0.6"/>
-                  <circle cx="132" cy="112" r="6" fill="#FFA3A3" opacity="0.6"/>
-                  <!-- Mouth (Happy smile by default) -->
-                  <path class="mouth" d="M 90 120 Q 100 130 110 120" stroke="#1C1C1C" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <!-- Welcome Card -->
+            <div class="welcome-card">
+              <div class="welcome-logo">
+                <svg class="logo-svg" viewBox="0 0 100 100" width="40" height="40">
+                  <rect x="5" y="5" width="90" height="90" rx="22" fill="#58CC02" />
+                  <path
+                    d="M25 38 Q25 33 30 33 L50 37 L70 33 Q75 33 75 38 L75 67 Q75 72 70 72 L50 68 L30 72 Q25 72 25 67 Z"
+                    fill="white" />
+                  <line x1="50" y1="37" x2="50" y2="68" stroke="#58CC02" stroke-width="2.5" stroke-linecap="round" />
+                  <path d="M75 18 L77 24 L83 26 L77 28 L75 34 L73 28 L67 26 L73 24 Z" fill="#FFC800" />
                 </svg>
               </div>
-              <div class="mascot-speech">
-                <div class="speech-bubble">
-                  <p id="mascot-text">Salom! Bugun yangi so'zlarni yodlashga tayyormisiz? Qani, boshlaylik!</p>
-                </div>
+              <div class="welcome-text">
+                <p id="greeting-text">Salom! Bugun yangi so'zlarni yodlashga tayyormisiz?</p>
               </div>
             </div>
 
-            <!-- Unit Selector Dashboard Panel -->
+            <!-- Unit Selector -->
             <div class="unit-selector-panel">
-              <span class="panel-icon">📂</span>
-              <div class="panel-content">
-                <label for="dashboard-unit-select">Mavzuni tanlang (Unit):</label>
-                <select id="dashboard-unit-select">
-                  <option value="all">Barcha Unitlar (1-7)</option>
-                  <option value="1">Unit 1</option>
-                  <option value="2">Unit 2</option>
-                  <option value="1,2" selected>Unit 1 & 2 (Tavsiya etiladi)</option>
-                  <option value="3">Unit 3</option>
-                  <option value="4">Unit 4</option>
-                  <option value="5">Unit 5</option>
-                  <option value="6">Unit 6</option>
-                  <option value="7">Unit 7 (Sinonimlar)</option>
-                </select>
-              </div>
-            </div>
-
-            <!-- So'zlar Sandig'i Cabinet -->
-            <div class="cabinet-section">
-              <h3 class="section-title">So'zlar Sandig'i (Leitner Qutilari)</h3>
-              <p class="section-desc">Mavzuni (Unit) tanlang va takrorlash uchun qutilarni bosing. Har bir qutida faqat muddati kelgan so'zlar takrorlanadi.</p>
-              <div class="cabinet">
-                <div class="drawers" id="drawers">
-                  <!-- Rendered dynamically in app.js -->
+              <div class="panel-header">
+                <span class="panel-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                  </svg></span>
+                <div>
+                  <h3>Unitlarni tanlang</h3>
+                  <p>Yodlamoqchi bo'lgan unitlaringizni belgilang</p>
                 </div>
               </div>
+              <div class="unit-checkbox-grid" id="unit-checkbox-grid">
+                <label class="unit-checkbox-label">
+                  <input type="checkbox" class="unit-checkbox" value="1" checked>
+                  <span class="unit-checkbox-custom">Unit 1</span>
+                </label>
+                <label class="unit-checkbox-label">
+                  <input type="checkbox" class="unit-checkbox" value="2" checked>
+                  <span class="unit-checkbox-custom">Unit 2</span>
+                </label>
+                <label class="unit-checkbox-label">
+                  <input type="checkbox" class="unit-checkbox" value="3">
+                  <span class="unit-checkbox-custom">Unit 3</span>
+                </label>
+                <label class="unit-checkbox-label">
+                  <input type="checkbox" class="unit-checkbox" value="4">
+                  <span class="unit-checkbox-custom">Unit 4</span>
+                </label>
+                <label class="unit-checkbox-label">
+                  <input type="checkbox" class="unit-checkbox" value="5">
+                  <span class="unit-checkbox-custom">Unit 5</span>
+                </label>
+                <label class="unit-checkbox-label">
+                  <input type="checkbox" class="unit-checkbox" value="6">
+                  <span class="unit-checkbox-custom">Unit 6</span>
+                </label>
+              </div>
             </div>
 
-            <!-- Game Modes Grid -->
+            <!-- Leitner Cabinet -->
+            <div class="cabinet-section">
+              <div class="section-header">
+                <h3 class="section-title">So'zlar Sandig'i</h3>
+                <p class="section-desc">Qutini bosib takrorlashni boshlang</p>
+              </div>
+              <div class="cabinet">
+                <div class="drawers" id="drawers"></div>
+              </div>
+            </div>
+
+            <!-- Game Modes -->
             <div class="game-modes-section">
-              <h3 class="section-title">Mashq turlari (Alohida o'yinlar)</h3>
+              <div class="section-header">
+                <h3 class="section-title">Mashq turlari</h3>
+                <p class="section-desc">O'zingizga yoqgan o'yinni tanlang</p>
+              </div>
               <div class="game-modes-grid">
-                
                 <div class="game-mode-card" data-mode="flashcard">
-                  <span class="mode-icon">📖</span>
+                  <span class="mode-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                    </svg></span>
                   <div class="mode-info">
                     <h4>Kartochkalar</h4>
-                    <p>So'zlarni yodga solish va o'rganish (Flip card)</p>
+                    <p>So'zlarni yodga solish</p>
                   </div>
-                  <button class="btn btn-secondary btn-3d btn-mini-start" data-mode="flashcard">
+                  <button class="btn btn-secondary btn-mini-start" data-mode="flashcard">
                     <span class="btn-content">Boshlash</span>
                   </button>
                 </div>
-
                 <div class="game-mode-card" data-mode="choice">
-                  <span class="mode-icon">🎯</span>
+                  <span class="mode-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <circle cx="12" cy="12" r="6" />
+                      <circle cx="12" cy="12" r="2" />
+                    </svg></span>
                   <div class="mode-info">
-                    <h4>Test (Ko'p tanlovli)</h4>
-                    <p>Variantlar ichidan to'g'ri tarjimani tanlang</p>
+                    <h4>Test</h4>
+                    <p>To'g'ri javobni tanlang</p>
                   </div>
-                  <button class="btn btn-secondary btn-3d btn-mini-start" data-mode="choice">
+                  <button class="btn btn-secondary btn-mini-start" data-mode="choice">
                     <span class="btn-content">Boshlash</span>
                   </button>
                 </div>
-
                 <div class="game-mode-card" data-mode="typing">
-                  <span class="mode-icon">⌨️</span>
+                  <span class="mode-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="2" y="4" width="20" height="16" rx="2" ry="2" />
+                      <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M7 16h10" />
+                    </svg></span>
                   <div class="mode-info">
                     <h4>Yozma mashq</h4>
-                    <p>So'z tarjimasini klaviaturada kiriting</p>
+                    <p>Klaviaturada kiriting</p>
                   </div>
-                  <button class="btn btn-secondary btn-3d btn-mini-start" data-mode="typing">
+                  <button class="btn btn-secondary btn-mini-start" data-mode="typing">
                     <span class="btn-content">Boshlash</span>
                   </button>
                 </div>
-
                 <div class="game-mode-card" data-mode="tiles">
-                  <span class="mode-icon">🧩</span>
+                  <span class="mode-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path
+                        d="M19.439 7.85c-.049.322.059.548.397.548h.5c.71 0 1.064.548 1.064 1.064v3.5c0 .71-.548 1.064-1.064 1.064h-3.5c-.71 0-1.064-.548-1.064-1.064v-.5c0-.322-.227-.43-.548-.397-1.248.121-2.248.846-2.248 2.248v.5c0 .71-.548 1.064-1.064 1.064h-3.5c-.71 0-1.064-.548-1.064-1.064v-3.5c0-.71.548-1.064 1.064-1.064h.5c.322 0 .43-.227.397-.548-.121-1.248-.846-2.248-2.248-2.248h-.5c-.71 0-1.064-.548-1.064-1.064v-3.5c0-.71.548-1.064 1.064-1.064h3.5c.71 0 1.064.548 1.064 1.064v.5c0 .322.227.43.548.397 1.248-.121 2.248-.846 2.248-2.248v-.5c0-.71.548-1.064 1.064-1.064h3.5c.71 0 1.064.548 1.064 1.064v3.5c0 .71-.548 1.064-1.064 1.064h-.5c-.322 0-.43.227-.397.548z" />
+                    </svg></span>
                   <div class="mode-info">
                     <h4>Harf terish</h4>
-                    <p>Harflardan to'g'ri so'zni yig'ing</p>
+                    <p>Harflardan so'z yig'ing</p>
                   </div>
-                  <button class="btn btn-secondary btn-3d btn-mini-start" data-mode="tiles">
+                  <button class="btn btn-secondary btn-mini-start" data-mode="tiles">
                     <span class="btn-content">Boshlash</span>
                   </button>
                 </div>
-
                 <div class="game-mode-card" data-mode="matching">
-                  <span class="mode-icon">🔗</span>
+                  <span class="mode-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                    </svg></span>
                   <div class="mode-info">
-                    <h4>Juftliklarni topish</h4>
-                    <p>Inglizcha va o'zbekcha so'zlarni moslang</p>
+                    <h4>Juftliklar</h4>
+                    <p>So'zlarni moslang</p>
                   </div>
-                  <button class="btn btn-secondary btn-3d btn-mini-start" data-mode="matching">
+                  <button class="btn btn-secondary btn-mini-start" data-mode="matching">
                     <span class="btn-content">Boshlash</span>
                   </button>
                 </div>
-
                 <div class="game-mode-card" data-mode="blank">
-                  <span class="mode-icon">✍️</span>
+                  <span class="mode-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 19l7-7 3 3-7 7-3-3z" />
+                      <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+                      <path d="M2 2l7.586 7.586" />
+                      <circle cx="11" cy="11" r="2" />
+                    </svg></span>
                   <div class="mode-info">
                     <h4>Gap to'ldirish</h4>
-                    <p>Misol gaplardagi bo'sh joyni to'ldiring</p>
+                    <p>Bo'sh joyni to'ldiring</p>
                   </div>
-                  <button class="btn btn-secondary btn-3d btn-mini-start" data-mode="blank">
+                  <button class="btn btn-secondary btn-mini-start" data-mode="blank">
                     <span class="btn-content">Boshlash</span>
                   </button>
                 </div>
-
                 <div class="game-mode-card" data-mode="listen">
-                  <span class="mode-icon">🎧</span>
+                  <span class="mode-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+                      <path
+                        d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+                    </svg></span>
                   <div class="mode-info">
                     <h4>Tinglab yozish</h4>
-                    <p>Eshitilgan so'zni to'g'ri yozing</p>
+                    <p>Eshitganingizni yozing</p>
                   </div>
-                  <button class="btn btn-secondary btn-3d btn-mini-start" data-mode="listen">
+                  <button class="btn btn-secondary btn-mini-start" data-mode="listen">
                     <span class="btn-content">Boshlash</span>
                   </button>
                 </div>
-
               </div>
             </div>
           </div>
 
-          <!-- Right Column: Quick Stats & Guide -->
+          <!-- Right Column -->
           <div class="dash-sidebar">
-            <!-- Quick Stats Summary -->
-            <div class="quick-stats-card" style="margin-bottom: 24px;">
+            <div class="quick-stats-card">
               <div class="stat-box">
-                <span class="stat-icon">🔥</span>
+                <span class="stat-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                      d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38.5-2 1-3 1.072-2.144 2.5-2.5 3-2.5 0 0 .5 0 1 .5 0 0 .5 1 .5 2 0 0 .5 1 1 1.5s.5 1.5.5 2.5a5 5 0 0 1-5 5c-1.5 0-2.5-.5-3-1-.5-.5-1-1.5-1-2.5z" />
+                  </svg></span>
                 <span class="stat-number" id="stats-streak">0</span>
-                <span class="stat-text">Kunlik Streak</span>
+                <span class="stat-text">Streak</span>
               </div>
               <div class="stat-box">
-                <span class="stat-icon">⭐</span>
+                <span class="stat-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                  </svg></span>
                 <span class="stat-number" id="stats-xp">0</span>
                 <span class="stat-text">Jami XP</span>
               </div>
             </div>
 
-            <!-- Vocabulary Stats -->
-            <div class="quick-stats-card" style="margin-bottom: 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-              <div class="stat-box" style="padding: 10px 4px;">
-                <span class="stat-icon" style="font-size: 18px;">📚</span>
-                <span class="stat-number" id="stat-total" style="font-size: 16px;">0</span>
-                <span class="stat-text" style="font-size: 9px;">Jami so'z</span>
+            <div class="quick-stats-card three-col">
+              <div class="stat-box">
+                <span class="stat-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                  </svg></span>
+                <span class="stat-number" id="stat-total">0</span>
+                <span class="stat-text">Jami so'z</span>
               </div>
-              <div class="stat-box" style="padding: 10px 4px;">
-                <span class="stat-icon" style="font-size: 18px;">📅</span>
-                <span class="stat-number" id="stat-due" style="font-size: 16px;">0</span>
-                <span class="stat-text" style="font-size: 9px;">Kutilmoqda</span>
+              <div class="stat-box">
+                <span class="stat-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg></span>
+                <span class="stat-number" id="stat-due">0</span>
+                <span class="stat-text">Kutilmoqda</span>
               </div>
-              <div class="stat-box" style="padding: 10px 4px;">
-                <span class="stat-icon" style="font-size: 18px;">🏆</span>
-                <span class="stat-number" id="stat-mastered" style="font-size: 16px;">0</span>
-                <span class="stat-text" style="font-size: 9px;">O'zlashtirildi</span>
+              <div class="stat-box">
+                <span class="stat-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+                    <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+                    <path d="M4 22h16" />
+                    <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+                    <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+                    <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+                  </svg></span>
+                <span class="stat-number" id="stat-mastered">0</span>
+                <span class="stat-text">O'zlashtirildi</span>
               </div>
             </div>
 
-            <!-- Leitner System Guide -->
             <div class="box-stats-card">
-              <h3>Oraliqli takrorlash qoidalari</h3>
-              <p class="stats-desc" style="margin-bottom: 12px;">Har bir so'z 5 ta "qutida" saqlanadi. So'zlarni o'zlashtirish orqali ularni yuqori qutilarga o'tkazing:</p>
-              <ul style="list-style: none; font-size: 13px; font-weight: 700; color: var(--text-muted); display: flex; flex-direction: column; gap: 8px; padding-left: 0;">
-                <li>📅 <strong>1-quti</strong> — Har kuni takrorlanadi</li>
-                <li>📅 <strong>2-quti</strong> — 2 kunda bir takrorlanadi</li>
-                <li>📅 <strong>3-quti</strong> — 4 kunda bir takrorlanadi</li>
-                <li>📅 <strong>4-quti</strong> — 8 kunda bir takrorlanadi</li>
-                <li>📅 <strong>5-quti</strong> — 16 kunda bir takrorlanadi</li>
+              <h3>Takroidlash tizimi</h3>
+              <p class="stats-desc">Har bir so'z 5 ta qutida saqlanadi. To'g'ri javob — keyingi qutiga o'tadi.</p>
+              <ul class="leitner-rules">
+                <li><strong>1-quti</strong> — Har kuni</li>
+                <li><strong>2-quti</strong> — 2 kunda bir</li>
+                <li><strong>3-quti</strong> — 4 kunda bir</li>
+                <li><strong>4-quti</strong> — 8 kunda bir</li>
+                <li><strong>5-quti</strong> — 16 kunda bir</li>
               </ul>
-              <p class="stats-desc" style="margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 10px; font-weight: 700;">
-                🟢 <strong>Bildim</strong> — so'z keyingi qutiga o'tadi.<br>
-                🔴 <strong>Bilmadim</strong> — so'z bitta orqadagi qutiga qaytadi.
-              </p>
             </div>
           </div>
 
         </div>
       </section>
 
-
       <!-- ================= VOCABULARY PAGE ================= -->
       <section id="vocab-page" class="page">
         <div class="vocab-header">
           <h2>Mening Lug'atim</h2>
-          <button class="btn btn-primary btn-3d" id="btn-open-add-modal">
-            <span class="btn-content">+ Yangi so'z qo'shish</span>
+          <button class="btn btn-primary" id="btn-open-add-modal">
+            <span class="btn-content">+ Yangi so'z</span>
           </button>
         </div>
 
-        <!-- Filters and Search -->
         <div class="vocab-controls">
           <div class="search-wrapper">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="search-input" placeholder="So'z yoki tarjimani qidirish...">
+            <span class="search-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg></span>
+            <input type="text" id="search-input" placeholder="So'z qidirish...">
           </div>
           <div class="filter-wrapper">
-            <label for="box-filter">Quti bo'yicha:</label>
             <select id="box-filter">
               <option value="all">Hammasi</option>
-              <option value="1">1-quti (Yangi/Qiyin)</option>
+              <option value="1">1-quti</option>
               <option value="2">2-quti</option>
               <option value="3">3-quti</option>
               <option value="4">4-quti</option>
-              <option value="5">5-quti (O'zlashtirilgan)</option>
+              <option value="5">5-quti</option>
             </select>
           </div>
         </div>
 
-        <!-- Vocabulary Grid List -->
-        <div class="vocab-grid" id="vocab-grid-list">
-          <!-- Dynamic words will be loaded here -->
-        </div>
+        <div class="vocab-grid" id="vocab-grid-list"></div>
 
-        <!-- Add Word Modal Dialog -->
         <div class="modal-overlay" id="add-word-modal">
           <div class="modal-card">
             <div class="modal-header">
               <h3>Yangi so'z qo'shish</h3>
-              <button class="btn-close-modal" id="btn-close-modal">×</button>
+              <button class="btn-close-modal" id="btn-close-modal">
+                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
             </div>
             <form id="add-word-form">
               <div class="form-group">
@@ -335,17 +389,17 @@
               </div>
               <div class="form-group">
                 <label for="word-uz">O'zbekcha tarjimasi *</label>
-                <input type="text" id="word-uz" required placeholder="Masalan: qiyinchilik, chaqiriq">
+                <input type="text" id="word-uz" required placeholder="Masalan: qiyinchilik">
               </div>
               <div class="form-group">
                 <label for="word-example">Misol jumla (ixtiyoriy)</label>
-                <textarea id="word-example" rows="2" placeholder="Masalan: Life is full of challenges."></textarea>
+                <textarea id="word-example" rows="2" placeholder="Life is full of challenges."></textarea>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-3d" id="btn-cancel-modal">
-                  <span class="btn-content">Bekor qilish</span>
+                <button type="button" class="btn btn-secondary" id="btn-cancel-modal">
+                  <span class="btn-content">Bekor</span>
                 </button>
-                <button type="submit" class="btn btn-primary btn-3d">
+                <button type="submit" class="btn btn-primary">
                   <span class="btn-content">Qo'shish</span>
                 </button>
               </div>
@@ -354,33 +408,29 @@
         </div>
       </section>
 
-
       <!-- ================= EXERCISE PAGE ================= -->
       <section id="exercise-page" class="page full-screen-page">
-        <!-- Exercise Header -->
         <div class="exercise-header">
-          <button class="btn-exit-exercise" id="btn-exit-exercise">×</button>
-          
+          <button class="btn-exit-exercise" id="btn-exit-exercise">
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
           <div class="progress-bar-container">
             <div class="progress-bar-inner" id="exercise-progress" style="width: 10%"></div>
           </div>
-
-          <div class="hearts-container" id="hearts-container">
-            <!-- Dynamic Hearts represented as SVG -->
-            <span class="heart active">❤️</span>
-            <span class="heart active">❤️</span>
-            <span class="heart active">❤️</span>
-            <span class="heart active">❤️</span>
-            <span class="heart active">❤️</span>
-          </div>
-
+          <div class="hearts-container" id="hearts-container"></div>
           <div class="exercise-xp-display">
-            <span class="xp-star">⭐</span>
-            <span id="exercise-xp-count">0</span> XP
+            <span class="xp-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg></span>
+            <span id="exercise-xp-count">0</span>
           </div>
         </div>
 
-        <!-- Cabinet Mini Indicators on Exercise Page -->
         <div class="exercise-mini-cabinet" id="exercise-mini-cabinet" style="display: none;">
           <div class="mini-box" data-box="1">1</div>
           <div class="mini-box" data-box="2">2</div>
@@ -389,111 +439,80 @@
           <div class="mini-box" data-box="5">5</div>
         </div>
 
-        <!-- Exercise Content Wrapper -->
         <div class="exercise-body">
-          <div class="question-container" id="question-wrapper">
-            <!-- Dynamic game cards loaded by JS -->
-          </div>
+          <div class="question-container" id="question-wrapper"></div>
         </div>
 
-        <!-- Exercise Footer Action Banner -->
         <div class="exercise-footer" id="exercise-footer">
-          <div class="footer-message-area" id="footer-message-area">
-            <!-- Correct/Wrong notification text dynamically loaded -->
-          </div>
-          <button class="btn btn-footer btn-3d" id="btn-footer-action" disabled>
+          <div class="footer-message-area" id="footer-message-area"></div>
+          <button class="btn btn-footer" id="btn-footer-action" disabled>
             <span class="btn-content">Tekshirish</span>
           </button>
-
-          <!-- Flashcard Specific Footer Buttons -->
-          <div class="flashcard-footer-buttons" id="flashcard-footer-buttons" style="display: none; width: 100%; gap: 16px;">
-            <button class="btn btn-danger btn-3d" id="btn-flashcard-no" style="flex: 1;">
-              <span class="btn-content">🔴 Bilmadim</span>
+          <div class="flashcard-footer-buttons" id="flashcard-footer-buttons"
+            style="display: none; width: 100%; gap: 12px;">
+            <button class="btn btn-danger" id="btn-flashcard-no" style="flex: 1;">
+              <span class="btn-content">Bilmadim</span>
             </button>
-            <button class="btn btn-primary btn-3d" id="btn-flashcard-yes" style="flex: 1;">
-              <span class="btn-content">🟢 Bildim</span>
+            <button class="btn btn-primary" id="btn-flashcard-yes" style="flex: 1;">
+              <span class="btn-content">Bildim</span>
             </button>
           </div>
         </div>
       </section>
-
 
       <!-- ================= SUMMARY PAGE ================= -->
       <section id="summary-page" class="page">
         <div class="summary-wrapper">
-          
           <div class="confetti-container" id="confetti-container"></div>
-
-          <div class="mascot-card summary-mascot-card">
-            <!-- Mascot SVG (Happy/Celebration State) -->
-            <svg class="mascot-svg celebrating" viewBox="0 0 200 200" width="160" height="160">
-              <defs>
-                <linearGradient id="bodyGradCeleb" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#7EFC1A" />
-                  <stop offset="100%" stop-color="#58CC02" />
-                </linearGradient>
-              </defs>
-              <ellipse cx="100" cy="180" rx="60" ry="10" fill="rgba(0,0,0,0.1)"/>
-              
-              <!-- Celebrating wings raised -->
-              <path class="arm-left celeb-left" d="M 50 110 Q 20 60 35 55 Q 50 65 60 110" fill="#58CC02" stroke="#3D9402" stroke-width="2"/>
-              <path class="arm-right celeb-right" d="M 150 110 Q 180 60 165 55 Q 150 65 140 110" fill="#58CC02" stroke="#3D9402" stroke-width="2"/>
-              
-              <ellipse cx="78" cy="172" rx="15" ry="10" fill="#FF9600" transform="rotate(-10 78 172)"/>
-              <ellipse cx="122" cy="172" rx="15" ry="10" fill="#FF9600" transform="rotate(10 122 172)"/>
-              <circle cx="100" cy="120" r="55" fill="url(#bodyGradCeleb)" stroke="#3D9402" stroke-width="3"/>
-              <path d="M 65 130 Q 100 100 135 130 Q 100 180 65 130 Z" fill="#F1F9EB"/>
-              
-              <g class="eyes happy-eyes">
-                <!-- Curved happy eyes -->
-                <path d="M 68 95 Q 80 85 92 95" stroke="#1C1C1C" stroke-width="5" fill="none" stroke-linecap="round"/>
-                <path d="M 108 95 Q 120 85 132 95" stroke="#1C1C1C" stroke-width="5" fill="none" stroke-linecap="round"/>
-              </g>
-              
-              <circle cx="68" cy="112" r="6" fill="#FFA3A3" opacity="0.8"/>
-              <circle cx="132" cy="112" r="6" fill="#FFA3A3" opacity="0.8"/>
-              <!-- Wide happy mouth -->
-              <path class="mouth" d="M 88 120 Q 100 140 112 120 Z" fill="#FF4B4B" stroke="#1C1C1C" stroke-width="3"/>
-            </svg>
+          <div class="summary-icon-card">
+            <div class="summary-icon-circle success" id="summary-icon-circle"></div>
             <h2 class="summary-title" id="summary-title-text">Ajoyib natija!</h2>
-            <p class="summary-subtitle" id="summary-motivation-text">Bugungi mashg'ulotni a'lo darajada yakunladingiz.</p>
+            <p class="summary-subtitle" id="summary-motivation-text">Bugungi mashg'ulotni muvaffaqiyatli yakunladingiz.
+            </p>
           </div>
 
-          <!-- Score Cards Grid -->
           <div class="summary-stats-grid">
             <div class="summary-stat-card">
-              <span class="sum-icon">⭐</span>
+              <span class="sum-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg></span>
               <span class="sum-value" id="summary-xp">+0 XP</span>
               <span class="sum-label">Tajriba ochkosi</span>
             </div>
-            
             <div class="summary-stat-card">
-              <span class="sum-icon">🎯</span>
+              <span class="sum-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <circle cx="12" cy="12" r="6" />
+                  <circle cx="12" cy="12" r="2" />
+                </svg></span>
               <span class="sum-value" id="summary-accuracy">0%</span>
-              <span class="sum-label">Aniqlik darajasi</span>
+              <span class="sum-label">Aniqlik</span>
             </div>
-
             <div class="summary-stat-card">
-              <span class="sum-icon">🔥</span>
+              <span class="sum-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path
+                    d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38.5-2 1-3 1.072-2.144 2.5-2.5 3-2.5 0 0 .5 0 1 .5 0 0 .5 1 .5 2 0 0 .5 1 1 1.5s.5 1.5.5 2.5a5 5 0 0 1-5 5c-1.5 0-2.5-.5-3-1-.5-.5-1-1.5-1-2.5z" />
+                </svg></span>
               <span class="sum-value" id="summary-streak">0 kun</span>
-              <span class="sum-label">Kunlik Streak</span>
+              <span class="sum-label">Streak</span>
             </div>
           </div>
 
-          <!-- Bottom Action -->
           <div class="summary-actions">
-            <button class="btn btn-primary btn-3d btn-block" id="btn-summary-done">
+            <button class="btn btn-primary btn-block" id="btn-summary-done">
               <span class="btn-content">Darsni tugatish</span>
             </button>
           </div>
-
         </div>
       </section>
 
     </main>
-
   </div>
 
   <script src="app.js"></script>
 </body>
+
 </html>
