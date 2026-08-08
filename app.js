@@ -219,6 +219,7 @@ let state = {
 // ================= EXERCISE SESSION STATE =================
 let session = {
   mode: 'due',
+  langMode: localStorage.getItem('yodla_lang_mode') || 'mixed',
   questions: [],
   currentIndex: 0,
   score: 0,
@@ -736,6 +737,23 @@ function initExerciseControls() {
       startSession(mode);
     });
   });
+
+  const langBtns = document.querySelectorAll(".lang-btn");
+  langBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const newLang = btn.getAttribute("data-lang");
+      session.langMode = newLang;
+      localStorage.setItem("yodla_lang_mode", newLang);
+
+      langBtns.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      if (session.questions && session.questions.length > 0) {
+        rebuildQuestionsLanguageDirection();
+        renderCurrentQuestion();
+      }
+    });
+  });
 }
 
 function startSession(mode) {
@@ -794,11 +812,71 @@ function startSession(mode) {
   document.getElementById("exercise-xp-count").textContent = 0;
 
   switchPage("exercise-page");
+  updateLangSelectorBar(gameMode);
   renderCurrentQuestion();
+}
+
+function updateLangSelectorBar(gameMode) {
+  const bar = document.getElementById("lang-selector-bar");
+  if (!bar) return;
+
+  const currentMode = gameMode || session.mode;
+  if (currentMode === 'flashcard' || currentMode === 'choice' || (currentMode && currentMode.startsWith('box'))) {
+    bar.style.display = 'flex';
+    const currentLang = session.langMode || 'mixed';
+    const btns = bar.querySelectorAll(".lang-btn");
+    btns.forEach(btn => {
+      btn.classList.remove("active");
+      if (btn.getAttribute("data-lang") === currentLang) {
+        btn.classList.add("active");
+      }
+    });
+  } else {
+    bar.style.display = 'none';
+  }
+}
+
+function rebuildQuestionsLanguageDirection() {
+  const lm = session.langMode || 'mixed';
+  const wordsList = session.questions.map(q => q.word);
+
+  session.questions.forEach((q, idx) => {
+    if (q.type === 'flashcard') {
+      if (lm === 'en') {
+        q.isEnFront = true;
+      } else if (lm === 'uz') {
+        q.isEnFront = false;
+      } else {
+        q.isEnFront = (idx % 2 === 0);
+      }
+    } else if (session.mode === 'choice' || q.type === 1 || q.type === 2) {
+      let targetType = 1;
+      if (lm === 'en') {
+        targetType = 1;
+      } else if (lm === 'uz') {
+        targetType = 2;
+      } else {
+        targetType = (idx % 2 === 0) ? 1 : 2;
+      }
+
+      q.type = targetType;
+      const word = q.word;
+      if (targetType === 1) {
+        q.promptText = `"${word.en}" so'zining to'g'ri tarjimasini tanlang:`;
+        q.correctAnswer = word.uz;
+        q.options = generateOptions(word.uz, 'uz', wordsList);
+      } else {
+        q.promptText = `"${word.uz}" so'zining to'g'ri inglizcha muqobilini tanlang:`;
+        q.correctAnswer = word.en;
+        q.options = generateOptions(word.en, 'en', wordsList);
+      }
+    }
+  });
 }
 
 function generateQuestionsForWords(wordsList, mode) {
   const generated = [];
+  const lm = session.langMode || 'mixed';
 
   wordsList.forEach((word, idx) => {
     let chosenType = 1;
@@ -816,7 +894,13 @@ function generateQuestionsForWords(wordsList, mode) {
       if (mode === 'flashcard') {
         chosenType = 'flashcard';
       } else if (mode === 'choice') {
-        chosenType = (idx % 2 === 0) ? 1 : 2;
+        if (lm === 'en') {
+          chosenType = 1;
+        } else if (lm === 'uz') {
+          chosenType = 2;
+        } else {
+          chosenType = (idx % 2 === 0) ? 1 : 2;
+        }
       } else if (mode === 'typing') {
         const typingTypes = [3, 6, 8];
         chosenType = typingTypes[idx % typingTypes.length];
@@ -838,6 +922,13 @@ function generateQuestionsForWords(wordsList, mode) {
 
     if (chosenType === 'flashcard') {
       questionObj.promptText = "So'zni eslang va aylantirib tekshiring:";
+      if (lm === 'en') {
+        questionObj.isEnFront = true;
+      } else if (lm === 'uz') {
+        questionObj.isEnFront = false;
+      } else {
+        questionObj.isEnFront = (idx % 2 === 0);
+      }
     }
     else if (chosenType === 1) {
       questionObj.promptText = `"${word.en}" so'zining to'g'ri tarjimasini tanlang:`;
@@ -1028,21 +1119,38 @@ function renderCurrentQuestion() {
     }
   }
 
+  updateLangSelectorBar();
+
   let html = `<h3 class="question-prompt">${question.promptText}</h3>`;
 
   if (question.type === 'flashcard') {
     const word = question.word;
+    const lm = session.langMode || 'mixed';
+    let isEnFront = true;
+    if (lm === 'en') {
+      isEnFront = true;
+    } else if (lm === 'uz') {
+      isEnFront = false;
+    } else {
+      isEnFront = (typeof question.isEnFront === 'boolean') ? question.isEnFront : (session.currentIndex % 2 === 0);
+    }
+
+    const frontTitle = isEnFront ? "Inglizcha" : "O'zbekcha";
+    const frontWord = isEnFront ? word.en : word.uz;
+    const backTitle = isEnFront ? "O'zbekcha tarjimasi" : "Inglizcha tarjimasi";
+    const backWord = isEnFront ? word.uz : word.en;
+
     html += `
       <div class="flashcard-wrapper">
         <div class="flashcard" id="flashcard-element">
           <div class="flashcard-front">
-            <span class="flashcard-title">Inglizcha</span>
-            <div class="flashcard-word">${word.en}</div>
+            <span class="flashcard-title">${frontTitle}</span>
+            <div class="flashcard-word">${frontWord}</div>
             <div class="flashcard-hint">${Icons.refresh} Aylantirish uchun bosing</div>
           </div>
           <div class="flashcard-back">
-            <span class="flashcard-title">O'zbekcha tarjimasi</span>
-            <div class="flashcard-word">${word.uz}</div>
+            <span class="flashcard-title">${backTitle}</span>
+            <div class="flashcard-word">${backWord}</div>
             ${word.example ? `<div class="flashcard-example">"${word.example}"</div>` : ''}
             <div class="flashcard-hint">${Icons.volume} Talaffuz qilish</div>
           </div>
@@ -1164,23 +1272,45 @@ function renderCurrentQuestion() {
   }
   else if (question.type === 5) {
     const pairs = question.matchingPairs;
-    const cards = [];
+    const enCards = [];
+    const uzCards = [];
+
     pairs.forEach((pair, idx) => {
-      cards.push({ id: `en_${idx}`, text: pair.en, type: 'en', pairIndex: idx });
-      cards.push({ id: `uz_${idx}`, text: pair.uz, type: 'uz', pairIndex: idx });
+      enCards.push({ id: `en_${idx}`, text: pair.en, type: 'en', pairIndex: idx });
+      uzCards.push({ id: `uz_${idx}`, text: pair.uz, type: 'uz', pairIndex: idx });
     });
 
-    const scrambledCards = shuffleArray(cards);
+    const scrambledEn = shuffleArray([...enCards]);
+    const scrambledUz = shuffleArray([...uzCards]);
 
-    html += `<div class="matching-grid" id="matching-cards-grid">`;
-    scrambledCards.forEach(card => {
+    html += `
+      <div class="matching-container" id="matching-cards-grid">
+        <div class="matching-column">
+          <div class="matching-column-title">Inglizcha</div>
+    `;
+    scrambledEn.forEach(card => {
       html += `
         <button class="match-card" data-id="${card.id}" data-type="${card.type}" data-pair="${card.pairIndex}">
           ${card.text}
         </button>
       `;
     });
-    html += `</div>`;
+    html += `
+        </div>
+        <div class="matching-column">
+          <div class="matching-column-title">O'zbekcha</div>
+    `;
+    scrambledUz.forEach(card => {
+      html += `
+        <button class="match-card" data-id="${card.id}" data-type="${card.type}" data-pair="${card.pairIndex}">
+          ${card.text}
+        </button>
+      `;
+    });
+    html += `
+        </div>
+      </div>
+    `;
 
     wrapper.innerHTML = html;
 
