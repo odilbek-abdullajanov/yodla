@@ -176,8 +176,8 @@ const defaultIrregularVerbs = [
   { uz: "bilmoq, tanimoq", v1: "know", v2: "knew", v3: "known", part: 1 },
   { uz: "tark etmoq, qoldirmoq", v1: "leave", v2: "left", v3: "left", part: 1 },
   { uz: "qarzga bermoq", v1: "lend", v2: "lent", v3: "lent", part: 1 },
-  { uz: "kuymoq, yondirmoq", v1: "burn", v2: "burned or burnt", v3: "burned or burnt", part: 1 },
-  { uz: "tush ko'rmoq, orzu qilmoq", v1: "dream", v2: "dreamed or dreamt", v3: "dreamed or dreamt", part: 1 },
+  { uz: "kuymoq, yondirmoq", v1: "burn", v2: "burnt", v3: "burnt", part: 1 },
+  { uz: "tush ko'rmoq, orzu qilmoq", v1: "dream", v2: "dreamt", v3: "dreamt", part: 1 },
 
   // ================= 2-USTUN (NOTO'G'RI FE'LLAR 2) =================
   { uz: "ruxsat bermoq", v1: "let", v2: "let", v3: "let", part: 2 },
@@ -221,8 +221,8 @@ const defaultIrregularVerbs = [
   { uz: "kiyib yurmoq", v1: "wear", v2: "wore", v3: "worn", part: 2 },
   { uz: "g'alaba qozonmoq, yutmoq", v1: "win", v2: "won", v3: "won", part: 2 },
   { uz: "yozmoq", v1: "write", v2: "wrote", v3: "written", part: 2 },
-  { uz: "o'rganmoq", v1: "learn", v2: "learned or learnt", v3: "learned or learnt", part: 2 },
-  { uz: "hidlamoq, hid taratmoq", v1: "smell", v2: "smelled or smelt", v3: "smelled or smelt", part: 2 }
+  { uz: "o'rganmoq", v1: "learn", v2: "learnt", v3: "learnt", part: 2 },
+  { uz: "hidlamoq, hid taratmoq", v1: "smell", v2: "smelt", v3: "smelt", part: 2 }
 ];
 
 const WORDS_PER_UNIT = 20;
@@ -447,7 +447,7 @@ async function saveData() {
   }
 }
 
-const IRREGULAR_STORAGE_KEY = 'yodla-irregular-verbs-v4';
+const IRREGULAR_STORAGE_KEY = 'yodla-irregular-verbs-v6';
 
 async function loadIrregularVerbs() {
   const localIrr = await StorageHelper.get(IRREGULAR_STORAGE_KEY);
@@ -1273,7 +1273,7 @@ function generateQuestionsForWords(wordsList, mode) {
     };
 
     if (chosenType === 'flashcard') {
-      questionObj.promptText = isIrr ? "Noto'g'ri fe'l shakllarini eslang va aylantiring:" : "So'zni eslang va aylantirib tekshiring:";
+      questionObj.promptText = isIrr ? "Noto'g'ri fe'lning 3 ta shaklini eslang va aylantiring:" : "So'zni eslang va aylantirib tekshiring:";
       if (lm === 'en') {
         questionObj.isEnFront = true;
       } else if (lm === 'uz') {
@@ -1284,22 +1284,9 @@ function generateQuestionsForWords(wordsList, mode) {
     }
     else if (chosenType === 1) {
       if (isIrr) {
-        const irrQuestionSubTypes = ['v1_to_v2', 'v1_to_v3', 'uz_to_all'];
-        const subType = irrQuestionSubTypes[idx % irrQuestionSubTypes.length];
-
-        if (subType === 'v1_to_v2') {
-          questionObj.promptText = `"${word.v1}" fe'lining V2 (Past Simple) shaklini tanlang:`;
-          questionObj.correctAnswer = word.v2.split('/')[0].trim();
-          questionObj.options = generateOptions(questionObj.correctAnswer, 'v2', wordsList);
-        } else if (subType === 'v1_to_v3') {
-          questionObj.promptText = `"${word.v1}" fe'lining V3 (Past Participle) shaklini tanlang:`;
-          questionObj.correctAnswer = word.v3.split('/')[0].trim();
-          questionObj.options = generateOptions(questionObj.correctAnswer, 'v3', wordsList);
-        } else {
-          questionObj.promptText = `"${word.uz}" fe'lining to'g'ri shakllarini (V1 - V2 - V3) tanlang:`;
-          questionObj.correctAnswer = `${word.v1} - ${word.v2} - ${word.v3}`;
-          questionObj.options = generateOptions(questionObj.correctAnswer, 'irr_full', wordsList);
-        }
+        questionObj.promptText = `"${word.uz}" fe'lining 3 ta shaklini (V1 - V2 - V3) tanlang:`;
+        questionObj.correctAnswer = `${word.v1} - ${word.v2} - ${word.v3}`;
+        questionObj.options = generateOptions(questionObj.correctAnswer, 'irr_full', wordsList);
       } else {
         questionObj.promptText = `"${word.en}" so'zining to'g'ri tarjimasini tanlang:`;
         questionObj.correctAnswer = word.uz;
@@ -1308,9 +1295,9 @@ function generateQuestionsForWords(wordsList, mode) {
     }
     else if (chosenType === 2) {
       if (isIrr) {
-        questionObj.promptText = `"${word.uz}" fe'lining V1 (Infinitive) shaklini tanlang:`;
-        questionObj.correctAnswer = word.v1;
-        questionObj.options = generateOptions(word.v1, 'v1', wordsList);
+        questionObj.promptText = `"${word.v1} - ${word.v2} - ${word.v3}" fe'lining o'zbekcha tarjimasini tanlang:`;
+        questionObj.correctAnswer = word.uz;
+        questionObj.options = generateOptions(word.uz, 'uz', wordsList);
       } else {
         questionObj.promptText = `"${word.uz}" so'zining to'g'ri inglizcha muqobilini tanlang:`;
         questionObj.correctAnswer = word.en;
@@ -1319,16 +1306,11 @@ function generateQuestionsForWords(wordsList, mode) {
     }
     else if (chosenType === 3) {
       if (isIrr) {
-        const isV2 = (idx % 2 === 0);
-        if (isV2) {
-          questionObj.promptText = `"${word.v1}" fe'lining V2 (Past Simple) shaklini yozing:`;
-          questionObj.targetWord = `${word.v1} ➔ V2 shakli (${word.uz})`;
-          questionObj.correctAnswer = word.v2.split('/')[0].trim();
-        } else {
-          questionObj.promptText = `"${word.v1}" fe'lining V3 (Past Participle) shaklini yozing:`;
-          questionObj.targetWord = `${word.v1} ➔ V3 shakli (${word.uz})`;
-          questionObj.correctAnswer = word.v3.split('/')[0].trim();
-        }
+        questionObj.promptText = `"${word.uz}" fe'lining 3 ta shaklini ketma-ket yozing (V1 V2 V3):`;
+        questionObj.targetWord = `${word.uz} (V1 - V2 - V3)`;
+        const cleanV2 = word.v2.split('/')[0].trim().replace(/\s+or\s+/g, ' ');
+        const cleanV3 = word.v3.split('/')[0].trim().replace(/\s+or\s+/g, ' ');
+        questionObj.correctAnswer = `${word.v1} ${cleanV2} ${cleanV3}`;
       } else {
         questionObj.promptText = `Ushbu so'zning inglizcha tarjimasini yozing:`;
         questionObj.targetWord = word.uz;
@@ -1337,8 +1319,8 @@ function generateQuestionsForWords(wordsList, mode) {
     }
     else if (chosenType === 4) {
       if (isIrr) {
-        questionObj.promptText = `"${word.uz}" (V1: Infinitive) harflarini to'g'ri tering:`;
-        questionObj.targetWord = `${word.uz} (V1)`;
+        questionObj.promptText = `"${word.uz}" (${word.v1} - ${word.v2} - ${word.v3}) asosiy (V1) shaklini tering:`;
+        questionObj.targetWord = `${word.v1} - ${word.v2} - ${word.v3} (${word.uz})`;
         questionObj.correctAnswer = word.v1;
         let letterList = word.v1.toLowerCase().replace(/[^a-z']/g, '').split('');
         questionObj.tiles = shuffleArray(letterList);
@@ -1368,13 +1350,20 @@ function generateQuestionsForWords(wordsList, mode) {
 
       questionObj.promptText = "So'zlarni mos juftliklari bilan toping:";
       questionObj.matchingPairs = matchingWords.map(w => ({
-        en: w.v1 ? `${w.v1} (${w.v2.split('/')[0].trim()})` : w.en,
+        en: w.v1 ? `${w.v1} - ${w.v2} - ${w.v3}` : w.en,
         uz: w.uz
       }));
     }
     else if (chosenType === 6) {
-      questionObj.promptText = isIrr ? "Eshitgan fe'lingizni yozing:" : "Eshitgan so'zingizni yozing:";
-      questionObj.correctAnswer = isIrr ? word.v1 : word.en;
+      if (isIrr) {
+        questionObj.promptText = `Eshitgan fe'lingizning 3 ta shaklini yozing:`;
+        const cleanV2 = word.v2.split('/')[0].trim().replace(/\s+or\s+/g, ' ');
+        const cleanV3 = word.v3.split('/')[0].trim().replace(/\s+or\s+/g, ' ');
+        questionObj.correctAnswer = `${word.v1} ${cleanV2} ${cleanV3}`;
+      } else {
+        questionObj.promptText = "Eshitgan so'zingizni yozing:";
+        questionObj.correctAnswer = word.en;
+      }
     }
     else if (chosenType === 7) {
       questionObj.promptText = "Gapdagi bo'shliqni to'ldiring:";
@@ -1388,9 +1377,11 @@ function generateQuestionsForWords(wordsList, mode) {
     }
     else if (chosenType === 8) {
       if (isIrr) {
-        questionObj.promptText = `"${word.uz}" fe'lining V1 (Infinitive) shaklini yozing:`;
-        questionObj.targetWord = word.uz;
-        questionObj.correctAnswer = word.v1;
+        questionObj.promptText = `"${word.uz}" fe'lining 3 ta shaklini (V1 V2 V3) yozing:`;
+        questionObj.targetWord = `${word.uz} (V1 - V2 - V3)`;
+        const cleanV2 = word.v2.split('/')[0].trim().replace(/\s+or\s+/g, ' ');
+        const cleanV3 = word.v3.split('/')[0].trim().replace(/\s+or\s+/g, ' ');
+        questionObj.correctAnswer = `${word.v1} ${cleanV2} ${cleanV3}`;
       } else {
         questionObj.promptText = `"${word.en}" so'zining o'zbekcha tarjimasini yozing:`;
         questionObj.targetWord = word.en;
@@ -2051,7 +2042,9 @@ function checkAnswer() {
     footer.classList.add("correct-footer");
 
     let explanationHTML = `<p>Siz to'g'ri topdingiz!</p>`;
-    if (question.word.example) {
+    if (question.word.isIrregular || question.word.v1) {
+      explanationHTML = `<p class="footer-msg-example">⚡ 3 ta shakli: <strong>${question.word.v1} — ${question.word.v2} — ${question.word.v3}</strong> (${question.word.uz})</p>`;
+    } else if (question.word.example) {
       explanationHTML = `<p class="footer-msg-example">Misol: <strong>${question.word.example}</strong></p>`;
     }
 
@@ -2077,11 +2070,15 @@ function checkAnswer() {
   } else {
     SoundEffects.playWrong();
     footer.classList.add("wrong-footer");
+    const isIrrWord = question.word.isIrregular || question.word.v1;
+    const irrExtraMsg = isIrrWord ? `<p style="margin-top: 4px; font-size: 13px; opacity: 0.95;">⚡ 3 ta shakli: <strong>${question.word.v1} — ${question.word.v2} — ${question.word.v3}</strong> (${question.word.uz})</p>` : '';
+
     footerMessage.innerHTML = `
       <div class="message-icon wrong">${Icons.x}</div>
       <div class="message-details">
         <h4>Xato!</h4>
         <p>To'g'ri javob: <strong>${correctExplanation}</strong></p>
+        ${irrExtraMsg}
       </div>
     `;
 
