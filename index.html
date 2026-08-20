@@ -50,6 +50,15 @@
             <span class="text">Lug'at</span>
           </a>
         </li>
+        <li class="nav-item" data-target="irregular-page">
+          <a href="#">
+            <span class="icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+              </svg></span>
+            <span class="text">Noto'g'ri fe'llar</span>
+          </a>
+        </li>
       </ul>
 
       <div class="nav-footer">
@@ -136,6 +145,14 @@
                 <label class="unit-checkbox-label">
                   <input type="checkbox" class="unit-checkbox" value="6">
                   <span class="unit-checkbox-custom">Unit 6</span>
+                </label>
+                <label class="unit-checkbox-label unit-checkbox-irregular">
+                  <input type="checkbox" class="unit-checkbox" value="irregular_1">
+                  <span class="unit-checkbox-custom">⚡ Fe'llar 1</span>
+                </label>
+                <label class="unit-checkbox-label unit-checkbox-irregular">
+                  <input type="checkbox" class="unit-checkbox" value="irregular_2">
+                  <span class="unit-checkbox-custom">⚡ Fe'llar 2</span>
                 </label>
               </div>
             </div>
@@ -397,6 +414,96 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="btn-cancel-modal">
+                  <span class="btn-content">Bekor</span>
+                </button>
+                <button type="submit" class="btn btn-primary">
+                  <span class="btn-content">Qo'shish</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= IRREGULAR VERBS PAGE ================= -->
+      <section id="irregular-page" class="page">
+        <div class="vocab-header">
+          <div>
+            <h2>Noto'g'ri Fe'llar (Irregular Verbs)</h2>
+            <p class="section-desc" style="margin-top: 4px; color: var(--text-muted);">
+              Ingliz tilidagi eng ko'p ishlatiladigan noto'g'ri fe'llar shakllari (V1, V2, V3)
+            </p>
+          </div>
+          <button class="btn btn-primary" id="btn-open-add-irregular-modal">
+            <span class="btn-content">+ Yangi fe'l</span>
+          </button>
+        </div>
+
+        <div class="vocab-controls">
+          <div class="search-wrapper" style="flex: 1;">
+            <span class="search-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg></span>
+            <input type="text" id="irregular-search-input" placeholder="O'zbekcha, V1, V2 yoki V3 bo'yicha qidirish...">
+          </div>
+          <div class="filter-wrapper">
+            <select id="irregular-part-filter">
+              <option value="all">Barcha fe'llar</option>
+              <option value="1">1-ustun (Fe'llar 1)</option>
+              <option value="2">2-ustun (Fe'llar 2)</option>
+            </select>
+          </div>
+          <div class="irregular-count-badge">
+            Jami: <strong id="irregular-total-count">0</strong> ta fe'l
+          </div>
+        </div>
+
+        <!-- 4 Ustunli Noto'g'ri Fe'llar Jadvali -->
+        <div class="irregular-table-container">
+          <div class="irregular-table-header">
+            <div class="irregular-col col-uz">O'zbekcha</div>
+            <div class="irregular-col col-v1">V1 (Infinitive)</div>
+            <div class="irregular-col col-v2">V2 (Past Simple)</div>
+            <div class="irregular-col col-v3">V3 (Past Participle)</div>
+            <div class="irregular-col col-actions"></div>
+          </div>
+          <div class="irregular-table-body" id="irregular-verbs-list"></div>
+        </div>
+
+        <!-- Yangi Irregular Verb Qo'shish Modali -->
+        <div class="modal-overlay" id="add-irregular-modal">
+          <div class="modal-card">
+            <div class="modal-header">
+              <h3>Yangi noto'g'ri fe'l qo'shish</h3>
+              <button class="btn-close-modal" id="btn-close-irregular-modal">
+                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+            <form id="add-irregular-form">
+              <div class="form-group">
+                <label for="irr-uz">O'zbekcha ma'nosi *</label>
+                <input type="text" id="irr-uz" required placeholder="Masalan: bormoq">
+              </div>
+              <div class="form-group">
+                <label for="irr-v1">V1 (Infinitive / Base) *</label>
+                <input type="text" id="irr-v1" required placeholder="Masalan: go">
+              </div>
+              <div class="form-group">
+                <label for="irr-v2">V2 (Past Simple) *</label>
+                <input type="text" id="irr-v2" required placeholder="Masalan: went">
+              </div>
+              <div class="form-group">
+                <label for="irr-v3">V3 (Past Participle) *</label>
+                <input type="text" id="irr-v3" required placeholder="Masalan: gone">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btn-cancel-irregular-modal">
                   <span class="btn-content">Bekor</span>
                 </button>
                 <button type="submit" class="btn btn-primary">

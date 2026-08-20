@@ -133,6 +133,98 @@ const defaultWords = [
   { en: "wise", uz: "dono", example: "It was a wise decision to study hard for the exam." }
 ];
 
+const defaultIrregularVerbs = [
+  // ================= 1-USTUN (NOTO'G'RI FE'LLAR 1) =================
+  { uz: "bo'lmoq", v1: "be", v2: "was/were", v3: "been", part: 1 },
+  { uz: "urmoq, yengmoq", v1: "beat", v2: "beat", v3: "beaten", part: 1 },
+  { uz: "bo'lmoq, aylanmoq", v1: "become", v2: "became", v3: "become", part: 1 },
+  { uz: "boshlamoq", v1: "begin", v2: "began", v3: "begun", part: 1 },
+  { uz: "tishlamoq", v1: "bite", v2: "bit", v3: "bitten", part: 1 },
+  { uz: "esmoq, puflamoq", v1: "blow", v2: "blew", v3: "blown", part: 1 },
+  { uz: "sindirmoq, buzmoq", v1: "break", v2: "broke", v3: "broken", part: 1 },
+  { uz: "olib kelmoq", v1: "bring", v2: "brought", v3: "brought", part: 1 },
+  { uz: "qurmoq", v1: "build", v2: "built", v3: "built", part: 1 },
+  { uz: "sotib olmoq", v1: "buy", v2: "bought", v3: "bought", part: 1 },
+  { uz: "tutmoq, ushlamoq", v1: "catch", v2: "caught", v3: "caught", part: 1 },
+  { uz: "tanlamoq", v1: "choose", v2: "chose", v3: "chosen", part: 1 },
+  { uz: "kelmoq", v1: "come", v2: "came", v3: "come", part: 1 },
+  { uz: "narx turmoq", v1: "cost", v2: "cost", v3: "cost", part: 1 },
+  { uz: "kesmoq", v1: "cut", v2: "cut", v3: "cut", part: 1 },
+  { uz: "bajarmoq, qilmoq", v1: "do", v2: "did", v3: "done", part: 1 },
+  { uz: "chizmoq, tortmoq", v1: "draw", v2: "drew", v3: "drawn", part: 1 },
+  { uz: "ichmoq", v1: "drink", v2: "drank", v3: "drunk", part: 1 },
+  { uz: "haydamoq", v1: "drive", v2: "drove", v3: "driven", part: 1 },
+  { uz: "yemoq", v1: "eat", v2: "ate", v3: "eaten", part: 1 },
+  { uz: "yiqilmoq, tushmoq", v1: "fall", v2: "fell", v3: "fallen", part: 1 },
+  { uz: "his qilmoq", v1: "feel", v2: "felt", v3: "felt", part: 1 },
+  { uz: "urushmoq, kurashmoq", v1: "fight", v2: "fought", v3: "fought", part: 1 },
+  { uz: "topmoq", v1: "find", v2: "found", v3: "found", part: 1 },
+  { uz: "uchmoq", v1: "fly", v2: "flew", v3: "flown", part: 1 },
+  { uz: "unutmoq, esdan chiqarmoq", v1: "forget", v2: "forgot", v3: "forgotten", part: 1 },
+  { uz: "olmoq, erishmoq", v1: "get", v2: "got", v3: "got", part: 1 },
+  { uz: "bermoq", v1: "give", v2: "gave", v3: "given", part: 1 },
+  { uz: "bormoq", v1: "go", v2: "went", v3: "gone", part: 1 },
+  { uz: "o'smoq, o'stirmoq", v1: "grow", v2: "grew", v3: "grown", part: 1 },
+  { uz: "osmoq, ilmoq", v1: "hang", v2: "hung", v3: "hung", part: 1 },
+  { uz: "ega bo'lmoq", v1: "have", v2: "had", v3: "had", part: 1 },
+  { uz: "eshitmoq", v1: "hear", v2: "heard", v3: "heard", part: 1 },
+  { uz: "yashirmoq, yashirinmoq", v1: "hide", v2: "hid", v3: "hidden", part: 1 },
+  { uz: "urmoq, zarba bermoq", v1: "hit", v2: "hit", v3: "hit", part: 1 },
+  { uz: "ushlab turmoq", v1: "hold", v2: "held", v3: "held", part: 1 },
+  { uz: "jarohatlamoq, og'rimoq", v1: "hurt", v2: "hurt", v3: "hurt", part: 1 },
+  { uz: "saqlamoq, davom ettirmoq", v1: "keep", v2: "kept", v3: "kept", part: 1 },
+  { uz: "bilmoq, tanimoq", v1: "know", v2: "knew", v3: "known", part: 1 },
+  { uz: "tark etmoq, qoldirmoq", v1: "leave", v2: "left", v3: "left", part: 1 },
+  { uz: "qarzga bermoq", v1: "lend", v2: "lent", v3: "lent", part: 1 },
+  { uz: "kuymoq, yondirmoq", v1: "burn", v2: "burned or burnt", v3: "burned or burnt", part: 1 },
+  { uz: "tush ko'rmoq, orzu qilmoq", v1: "dream", v2: "dreamed or dreamt", v3: "dreamed or dreamt", part: 1 },
+
+  // ================= 2-USTUN (NOTO'G'RI FE'LLAR 2) =================
+  { uz: "ruxsat bermoq", v1: "let", v2: "let", v3: "let", part: 2 },
+  { uz: "yotmoq", v1: "lie", v2: "lay", v3: "lain", part: 2 },
+  { uz: "yoqmoq, yoritmoq", v1: "light", v2: "lit", v3: "lit", part: 2 },
+  { uz: "yo'qotmoq, yutqazmoq", v1: "lose", v2: "lost", v3: "lost", part: 2 },
+  { uz: "yasamoq, qilmoq", v1: "make", v2: "made", v3: "made", part: 2 },
+  { uz: "anglatmoq, nazarda tutmoq", v1: "mean", v2: "meant", v3: "meant", part: 2 },
+  { uz: "uchrashmoq, kutib olmoq", v1: "meet", v2: "met", v3: "met", part: 2 },
+  { uz: "to'lamoq", v1: "pay", v2: "paid", v3: "paid", part: 2 },
+  { uz: "qo'ymoq", v1: "put", v2: "put", v3: "put", part: 2 },
+  { uz: "o'qimoq", v1: "read", v2: "read", v3: "read", part: 2 },
+  { uz: "minmoq (ot, velosiped)", v1: "ride", v2: "rode", v3: "ridden", part: 2 },
+  { uz: "jiringlamoq, qo'ng'iroq qilmoq", v1: "ring", v2: "rang", v3: "rung", part: 2 },
+  { uz: "ko'tarilmoq, chiqmoq", v1: "rise", v2: "rose", v3: "risen", part: 2 },
+  { uz: "yugurmoq", v1: "run", v2: "ran", v3: "run", part: 2 },
+  { uz: "aytmoq, demoq", v1: "say", v2: "said", v3: "said", part: 2 },
+  { uz: "ko'rmoq", v1: "see", v2: "saw", v3: "seen", part: 2 },
+  { uz: "sotmoq", v1: "sell", v2: "sold", v3: "sold", part: 2 },
+  { uz: "yubormoq, jo'natmoq", v1: "send", v2: "sent", v3: "sent", part: 2 },
+  { uz: "porlamoq, charaqlamoq", v1: "shine", v2: "shone", v3: "shone", part: 2 },
+  { uz: "otmoq (o'q)", v1: "shoot", v2: "shot", v3: "shot", part: 2 },
+  { uz: "ko'rsatmoq", v1: "show", v2: "showed", v3: "shown", part: 2 },
+  { uz: "yopmoq", v1: "shut", v2: "shut", v3: "shut", part: 2 },
+  { uz: "kuylamoq, ashula aytmoq", v1: "sing", v2: "sang", v3: "sung", part: 2 },
+  { uz: "o'tirmoq", v1: "sit", v2: "sat", v3: "sat", part: 2 },
+  { uz: "uxlamoq", v1: "sleep", v2: "slept", v3: "slept", part: 2 },
+  { uz: "gapirmoq", v1: "speak", v2: "spoke", v3: "spoken", part: 2 },
+  { uz: "sarflamoq, o'tkazmoq (vaqt)", v1: "spend", v2: "spent", v3: "spent", part: 2 },
+  { uz: "turmoq, tik turmoq", v1: "stand", v2: "stood", v3: "stood", part: 2 },
+  { uz: "o'g'irlamoq", v1: "steal", v2: "stole", v3: "stolen", part: 2 },
+  { uz: "suzmoq", v1: "swim", v2: "swam", v3: "swum", part: 2 },
+  { uz: "olmoq", v1: "take", v2: "took", v3: "taken", part: 2 },
+  { uz: "o'rgatmoq, saboq bermoq", v1: "teach", v2: "taught", v3: "taught", part: 2 },
+  { uz: "yirtmoq", v1: "tear", v2: "tore", v3: "torn", part: 2 },
+  { uz: "aytib bermoq", v1: "tell", v2: "told", v3: "told", part: 2 },
+  { uz: "o'ylamoq, fikrlamoq", v1: "think", v2: "thought", v3: "thought", part: 2 },
+  { uz: "uloqtirmoq, otmoq", v1: "throw", v2: "threw", v3: "thrown", part: 2 },
+  { uz: "tushunmoq, anglamoq", v1: "understand", v2: "understood", v3: "understood", part: 2 },
+  { uz: "uyg'onmoq, uyg'otmoq", v1: "wake", v2: "woke", v3: "woken", part: 2 },
+  { uz: "kiyib yurmoq", v1: "wear", v2: "wore", v3: "worn", part: 2 },
+  { uz: "g'alaba qozonmoq, yutmoq", v1: "win", v2: "won", v3: "won", part: 2 },
+  { uz: "yozmoq", v1: "write", v2: "wrote", v3: "written", part: 2 },
+  { uz: "o'rganmoq", v1: "learn", v2: "learned or learnt", v3: "learned or learnt", part: 2 },
+  { uz: "hidlamoq, hid taratmoq", v1: "smell", v2: "smelled or smelt", v3: "smelled or smelt", part: 2 }
+];
+
 const WORDS_PER_UNIT = 20;
 const TOTAL_UNITS = 6;
 
@@ -211,6 +303,7 @@ const SoundEffects = {
 // ================= STATE MANAGEMENT =================
 let state = {
   words: [],
+  irregularVerbs: [],
   xp: 0,
   streak: 0,
   lastActiveDate: null
@@ -354,6 +447,64 @@ async function saveData() {
   }
 }
 
+const IRREGULAR_STORAGE_KEY = 'yodla-irregular-verbs-v4';
+
+async function loadIrregularVerbs() {
+  const localIrr = await StorageHelper.get(IRREGULAR_STORAGE_KEY);
+  if (localIrr && Array.isArray(localIrr) && localIrr.length > 0) {
+    const existingV1 = new Set(localIrr.map(v => v.v1.toLowerCase().trim()));
+    const missingDefaults = defaultIrregularVerbs.filter(dv => !existingV1.has(dv.v1.toLowerCase().trim()));
+    const newItems = missingDefaults.map((dv, idx) => ({
+      id: "irr_new_" + idx + "_" + Date.now(),
+      uz: dv.uz.trim(),
+      v1: dv.v1.trim(),
+      v2: dv.v2.trim(),
+      v3: dv.v3.trim(),
+      part: dv.part || 1,
+      en: dv.v1.trim(),
+      box: 1,
+      unit: dv.part === 2 ? 'irregular_2' : 'irregular_1',
+      isIrregular: true,
+      nextReviewDate: new Date().toISOString()
+    }));
+    state.irregularVerbs = [...localIrr, ...newItems].map((v, idx) => {
+      if (!v.id) v.id = "irr_" + idx + "_" + Date.now();
+      if (!v.box) v.box = 1;
+      if (!v.en) v.en = v.v1;
+      if (!v.part) {
+        const def = defaultIrregularVerbs.find(d => d.v1.toLowerCase().trim() === v.v1.toLowerCase().trim());
+        v.part = def ? def.part : 1;
+      }
+      v.unit = v.part === 2 ? 'irregular_2' : 'irregular_1';
+      if (!v.nextReviewDate) v.nextReviewDate = new Date().toISOString();
+      v.isIrregular = true;
+      return v;
+    });
+    if (newItems.length > 0) {
+      await saveIrregularVerbs();
+    }
+  } else {
+    state.irregularVerbs = defaultIrregularVerbs.map((dv, idx) => ({
+      id: "irr_" + idx + "_" + Date.now(),
+      uz: dv.uz.trim(),
+      v1: dv.v1.trim(),
+      v2: dv.v2.trim(),
+      v3: dv.v3.trim(),
+      part: dv.part || 1,
+      en: dv.v1.trim(),
+      box: 1,
+      unit: dv.part === 2 ? 'irregular_2' : 'irregular_1',
+      isIrregular: true,
+      nextReviewDate: new Date().toISOString()
+    }));
+    await saveIrregularVerbs();
+  }
+}
+
+async function saveIrregularVerbs() {
+  await StorageHelper.set(IRREGULAR_STORAGE_KEY, state.irregularVerbs);
+}
+
 function checkStreakValidity() {
   if (!state.lastActiveDate) return;
 
@@ -380,16 +531,49 @@ function getLocalDateString(date) {
 // ================= UNIT SELECTION =================
 function getSelectedUnits() {
   const checkboxes = document.querySelectorAll('.unit-checkbox:checked');
-  if (checkboxes.length === 0) return 'all';
-  return Array.from(checkboxes).map(cb => parseInt(cb.value));
+  if (checkboxes.length === 0) return [];
+  return Array.from(checkboxes).map(cb => {
+    const val = cb.value;
+    if (val === 'irregular_1' || val === 'irregular_2' || val === 'irregular') return val;
+    return parseInt(val);
+  });
 }
 
 function getFilteredPool() {
   const selected = getSelectedUnits();
-  let pool = [...state.words];
-  if (selected !== 'all') {
-    pool = pool.filter(w => selected.includes(w.unit));
+  if (selected.length === 0) return [];
+
+  let pool = [];
+
+  const numericUnits = selected.filter(s => typeof s === 'number');
+  if (numericUnits.length > 0) {
+    pool.push(...state.words.filter(w => numericUnits.includes(w.unit)));
   }
+
+  if (selected.includes('irregular_1')) {
+    const p1 = state.irregularVerbs.filter(v => v.part === 1).map(v => ({
+      ...v,
+      en: v.v1,
+      unit: 'irregular_1',
+      isIrregular: true,
+      box: v.box || 1,
+      nextReviewDate: v.nextReviewDate || new Date().toISOString()
+    }));
+    pool.push(...p1);
+  }
+
+  if (selected.includes('irregular_2')) {
+    const p2 = state.irregularVerbs.filter(v => v.part === 2).map(v => ({
+      ...v,
+      en: v.v1,
+      unit: 'irregular_2',
+      isIrregular: true,
+      box: v.box || 1,
+      nextReviewDate: v.nextReviewDate || new Date().toISOString()
+    }));
+    pool.push(...p2);
+  }
+
   return pool;
 }
 
@@ -508,6 +692,8 @@ function switchPage(pageId) {
       updateLeitnerBoxProgress();
     } else if (pageId === "vocab-page") {
       renderVocabList();
+    } else if (pageId === "irregular-page") {
+      renderIrregularVerbsList();
     }
   }
 }
@@ -660,6 +846,170 @@ function renderVocabList() {
     });
 
     listContainer.appendChild(card);
+  });
+}
+
+// ================= IRREGULAR VERBS MANAGEMENT =================
+let irregularSearchQuery = "";
+let irregularPartFilter = "all";
+
+function initIrregularVerbsControls() {
+  const searchInput = document.getElementById("irregular-search-input");
+  const partFilter = document.getElementById("irregular-part-filter");
+  const openAddBtn = document.getElementById("btn-open-add-irregular-modal");
+  const closeAddBtn = document.getElementById("btn-close-irregular-modal");
+  const cancelAddBtn = document.getElementById("btn-cancel-irregular-modal");
+  const addForm = document.getElementById("add-irregular-form");
+  const addModal = document.getElementById("add-irregular-modal");
+
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      irregularSearchQuery = e.target.value.toLowerCase().trim();
+      renderIrregularVerbsList();
+    });
+  }
+
+  if (partFilter) {
+    partFilter.addEventListener("change", (e) => {
+      irregularPartFilter = e.target.value;
+      renderIrregularVerbsList();
+    });
+  }
+
+  if (openAddBtn && addModal) {
+    openAddBtn.addEventListener("click", () => {
+      addModal.classList.add("active");
+    });
+  }
+
+  const closeModalFunc = () => {
+    if (addModal) addModal.classList.remove("active");
+    if (addForm) addForm.reset();
+  };
+
+  if (closeAddBtn) closeAddBtn.addEventListener("click", closeModalFunc);
+  if (cancelAddBtn) cancelAddBtn.addEventListener("click", closeModalFunc);
+
+  if (addForm) {
+    addForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const uz = document.getElementById("irr-uz").value.trim();
+      const v1 = document.getElementById("irr-v1").value.trim();
+      const v2 = document.getElementById("irr-v2").value.trim();
+      const v3 = document.getElementById("irr-v3").value.trim();
+
+      if (uz && v1 && v2 && v3) {
+        const newVerb = {
+          id: "irr_" + Date.now(),
+          uz: uz,
+          v1: v1,
+          v2: v2,
+          v3: v3,
+          part: 1,
+          en: v1,
+          box: 1,
+          unit: 'irregular_1',
+          isIrregular: true,
+          nextReviewDate: new Date().toISOString()
+        };
+        state.irregularVerbs.unshift(newVerb);
+        await saveIrregularVerbs();
+        closeModalFunc();
+        renderIrregularVerbsList();
+        alert(`"${v1}" fe'li muvaffaqiyatli qo'shildi!`);
+      }
+    });
+  }
+}
+
+function renderIrregularVerbsList() {
+  const listContainer = document.getElementById("irregular-verbs-list");
+  const countBadge = document.getElementById("irregular-total-count");
+  if (!listContainer) return;
+
+  listContainer.innerHTML = "";
+
+  const filteredVerbs = state.irregularVerbs.filter(v => {
+    const q = irregularSearchQuery;
+    const matchesSearch = !q || (
+      v.uz.toLowerCase().includes(q) ||
+      v.v1.toLowerCase().includes(q) ||
+      v.v2.toLowerCase().includes(q) ||
+      v.v3.toLowerCase().includes(q)
+    );
+    const matchesPart = irregularPartFilter === "all" ||
+      (irregularPartFilter === "1" && v.part === 1) ||
+      (irregularPartFilter === "2" && v.part === 2);
+
+    return matchesSearch && matchesPart;
+  });
+
+  if (countBadge) {
+    countBadge.textContent = filteredVerbs.length;
+  }
+
+  if (filteredVerbs.length === 0) {
+    listContainer.innerHTML = `<div class="no-words-placeholder">Hech qanday noto'g'ri fe'l topilmadi.</div>`;
+    return;
+  }
+
+  filteredVerbs.forEach((verb, index) => {
+    const row = document.createElement("div");
+    row.className = "irregular-table-row";
+
+    const cleanWordForSpeech = (str) => str.split('/')[0].trim();
+
+    row.innerHTML = `
+      <div class="irregular-col col-uz">
+        <span class="row-num">${index + 1}</span>
+        <span class="uz-text">${verb.uz}</span>
+      </div>
+      <div class="irregular-col col-v1">
+        <button class="verb-speak-chip chip-v1" data-word="${cleanWordForSpeech(verb.v1)}" title="Tinglash: ${verb.v1}">
+          <span class="chip-text">${verb.v1}</span>
+          <span class="chip-icon">${Icons.volume}</span>
+        </button>
+      </div>
+      <div class="irregular-col col-v2">
+        <button class="verb-speak-chip chip-v2" data-word="${cleanWordForSpeech(verb.v2)}" title="Tinglash: ${verb.v2}">
+          <span class="chip-text">${verb.v2}</span>
+          <span class="chip-icon">${Icons.volume}</span>
+        </button>
+      </div>
+      <div class="irregular-col col-v3">
+        <button class="verb-speak-chip chip-v3" data-word="${cleanWordForSpeech(verb.v3)}" title="Tinglash: ${verb.v3}">
+          <span class="chip-text">${verb.v3}</span>
+          <span class="chip-icon">${Icons.volume}</span>
+        </button>
+      </div>
+      <div class="irregular-col col-actions">
+        <button class="btn-delete-verb" data-id="${verb.id}" title="Fe'lni o'chirish">
+          ${Icons.trash}
+        </button>
+      </div>
+    `;
+
+    row.querySelectorAll(".verb-speak-chip").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const word = btn.getAttribute("data-word");
+        if (word) speakWord(word);
+      });
+    });
+
+    const delBtn = row.querySelector(".btn-delete-verb");
+    if (delBtn) {
+      delBtn.addEventListener("click", async (e) => {
+        e.stopPropagation();
+        if (confirm(`"${verb.v1}" (${verb.uz}) fe'lini ro'yxatdan o'chirmoqchimisiz?`)) {
+          state.irregularVerbs = state.irregularVerbs.filter(v => v.id !== verb.id);
+          await saveIrregularVerbs();
+          renderIrregularVerbsList();
+        }
+      });
+    }
+
+    listContainer.appendChild(row);
   });
 }
 
@@ -879,11 +1229,12 @@ function generateQuestionsForWords(wordsList, mode) {
   const lm = session.langMode || 'mixed';
 
   wordsList.forEach((word, idx) => {
+    const isIrr = word.isIrregular || word.unit === 'irregular' || !!word.v1;
     let chosenType = 1;
 
     if (mode === 'due' || mode === 'all') {
       let allowedTypes = [1, 2, 3, 4, 6, 8];
-      if (word.example && word.example.toLowerCase().includes(word.en.toLowerCase())) {
+      if (word.example && word.example.toLowerCase().includes((word.en || word.v1).toLowerCase())) {
         allowedTypes.push(7);
       }
       chosenType = allowedTypes[Math.floor(Math.random() * allowedTypes.length)];
@@ -909,7 +1260,7 @@ function generateQuestionsForWords(wordsList, mode) {
       } else if (mode === 'matching') {
         chosenType = 5;
       } else if (mode === 'blank') {
-        chosenType = (word.example && word.example.toLowerCase().includes(word.en.toLowerCase())) ? 7 : 1;
+        chosenType = (word.example && word.example.toLowerCase().includes((word.en || word.v1).toLowerCase())) ? 7 : 1;
       } else if (mode === 'listen') {
         chosenType = 6;
       }
@@ -917,11 +1268,12 @@ function generateQuestionsForWords(wordsList, mode) {
 
     const questionObj = {
       word: word,
-      type: chosenType
+      type: chosenType,
+      isIrregular: isIrr
     };
 
     if (chosenType === 'flashcard') {
-      questionObj.promptText = "So'zni eslang va aylantirib tekshiring:";
+      questionObj.promptText = isIrr ? "Noto'g'ri fe'l shakllarini eslang va aylantiring:" : "So'zni eslang va aylantirib tekshiring:";
       if (lm === 'en') {
         questionObj.isEnFront = true;
       } else if (lm === 'uz') {
@@ -931,26 +1283,72 @@ function generateQuestionsForWords(wordsList, mode) {
       }
     }
     else if (chosenType === 1) {
-      questionObj.promptText = `"${word.en}" so'zining to'g'ri tarjimasini tanlang:`;
-      questionObj.correctAnswer = word.uz;
-      questionObj.options = generateOptions(word.uz, 'uz', wordsList);
+      if (isIrr) {
+        const irrQuestionSubTypes = ['v1_to_v2', 'v1_to_v3', 'uz_to_all'];
+        const subType = irrQuestionSubTypes[idx % irrQuestionSubTypes.length];
+
+        if (subType === 'v1_to_v2') {
+          questionObj.promptText = `"${word.v1}" fe'lining V2 (Past Simple) shaklini tanlang:`;
+          questionObj.correctAnswer = word.v2.split('/')[0].trim();
+          questionObj.options = generateOptions(questionObj.correctAnswer, 'v2', wordsList);
+        } else if (subType === 'v1_to_v3') {
+          questionObj.promptText = `"${word.v1}" fe'lining V3 (Past Participle) shaklini tanlang:`;
+          questionObj.correctAnswer = word.v3.split('/')[0].trim();
+          questionObj.options = generateOptions(questionObj.correctAnswer, 'v3', wordsList);
+        } else {
+          questionObj.promptText = `"${word.uz}" fe'lining to'g'ri shakllarini (V1 - V2 - V3) tanlang:`;
+          questionObj.correctAnswer = `${word.v1} - ${word.v2} - ${word.v3}`;
+          questionObj.options = generateOptions(questionObj.correctAnswer, 'irr_full', wordsList);
+        }
+      } else {
+        questionObj.promptText = `"${word.en}" so'zining to'g'ri tarjimasini tanlang:`;
+        questionObj.correctAnswer = word.uz;
+        questionObj.options = generateOptions(word.uz, 'uz', wordsList);
+      }
     }
     else if (chosenType === 2) {
-      questionObj.promptText = `"${word.uz}" so'zining to'g'ri inglizcha muqobilini tanlang:`;
-      questionObj.correctAnswer = word.en;
-      questionObj.options = generateOptions(word.en, 'en', wordsList);
+      if (isIrr) {
+        questionObj.promptText = `"${word.uz}" fe'lining V1 (Infinitive) shaklini tanlang:`;
+        questionObj.correctAnswer = word.v1;
+        questionObj.options = generateOptions(word.v1, 'v1', wordsList);
+      } else {
+        questionObj.promptText = `"${word.uz}" so'zining to'g'ri inglizcha muqobilini tanlang:`;
+        questionObj.correctAnswer = word.en;
+        questionObj.options = generateOptions(word.en, 'en', wordsList);
+      }
     }
     else if (chosenType === 3) {
-      questionObj.promptText = `Ushbu so'zning inglizcha tarjimasini yozing:`;
-      questionObj.targetWord = word.uz;
-      questionObj.correctAnswer = word.en;
+      if (isIrr) {
+        const isV2 = (idx % 2 === 0);
+        if (isV2) {
+          questionObj.promptText = `"${word.v1}" fe'lining V2 (Past Simple) shaklini yozing:`;
+          questionObj.targetWord = `${word.v1} ➔ V2 shakli (${word.uz})`;
+          questionObj.correctAnswer = word.v2.split('/')[0].trim();
+        } else {
+          questionObj.promptText = `"${word.v1}" fe'lining V3 (Past Participle) shaklini yozing:`;
+          questionObj.targetWord = `${word.v1} ➔ V3 shakli (${word.uz})`;
+          questionObj.correctAnswer = word.v3.split('/')[0].trim();
+        }
+      } else {
+        questionObj.promptText = `Ushbu so'zning inglizcha tarjimasini yozing:`;
+        questionObj.targetWord = word.uz;
+        questionObj.correctAnswer = word.en;
+      }
     }
     else if (chosenType === 4) {
-      questionObj.promptText = `Harflarni to'g'ri tartibda terib, so'zni hosil qiling:`;
-      questionObj.targetWord = word.uz;
-      questionObj.correctAnswer = word.en;
-      let letterList = word.en.toLowerCase().replace(/[^a-z']/g, '').split('');
-      questionObj.tiles = shuffleArray(letterList);
+      if (isIrr) {
+        questionObj.promptText = `"${word.uz}" (V1: Infinitive) harflarini to'g'ri tering:`;
+        questionObj.targetWord = `${word.uz} (V1)`;
+        questionObj.correctAnswer = word.v1;
+        let letterList = word.v1.toLowerCase().replace(/[^a-z']/g, '').split('');
+        questionObj.tiles = shuffleArray(letterList);
+      } else {
+        questionObj.promptText = `Harflarni to'g'ri tartibda terib, so'zni hosil qiling:`;
+        questionObj.targetWord = word.uz;
+        questionObj.correctAnswer = word.en;
+        let letterList = word.en.toLowerCase().replace(/[^a-z']/g, '').split('');
+        questionObj.tiles = shuffleArray(letterList);
+      }
     }
     else if (chosenType === 5) {
       const matchingWords = [word];
@@ -961,7 +1359,7 @@ function generateQuestionsForWords(wordsList, mode) {
       }
 
       if (matchingWords.length < 4) {
-        const globalOthers = state.words.filter(w => !matchingWords.map(mw => mw.id).includes(w.id));
+        const globalOthers = (word.isIrregular ? state.irregularVerbs : state.words).filter(w => !matchingWords.map(mw => mw.id).includes(w.id));
         const shuffledGlobalOthers = shuffleArray(globalOthers);
         for (let i = 0; i < shuffledGlobalOthers.length && matchingWords.length < 4; i++) {
           matchingWords.push(shuffledGlobalOthers[i]);
@@ -969,26 +1367,35 @@ function generateQuestionsForWords(wordsList, mode) {
       }
 
       questionObj.promptText = "So'zlarni mos juftliklari bilan toping:";
-      questionObj.matchingPairs = matchingWords.map(w => ({ en: w.en, uz: w.uz }));
+      questionObj.matchingPairs = matchingWords.map(w => ({
+        en: w.v1 ? `${w.v1} (${w.v2.split('/')[0].trim()})` : w.en,
+        uz: w.uz
+      }));
     }
     else if (chosenType === 6) {
-      questionObj.promptText = "Eshitgan so'zingizni yozing:";
-      questionObj.correctAnswer = word.en;
+      questionObj.promptText = isIrr ? "Eshitgan fe'lingizni yozing:" : "Eshitgan so'zingizni yozing:";
+      questionObj.correctAnswer = isIrr ? word.v1 : word.en;
     }
     else if (chosenType === 7) {
       questionObj.promptText = "Gapdagi bo'shliqni to'ldiring:";
-
-      const escapedWord = word.en.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+      const targetWord = word.en || word.v1;
+      const escapedWord = targetWord.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
       const regex = new RegExp(`\\b${escapedWord}\\b`, 'gi');
 
-      questionObj.sentence = word.example.replace(regex, "_____");
-      questionObj.correctAnswer = word.en;
-      questionObj.options = generateOptions(word.en, 'en', wordsList);
+      questionObj.sentence = (word.example || "").replace(regex, "_____");
+      questionObj.correctAnswer = targetWord;
+      questionObj.options = generateOptions(targetWord, 'en', wordsList);
     }
     else if (chosenType === 8) {
-      questionObj.promptText = `"${word.en}" so'zining o'zbekcha tarjimasini yozing:`;
-      questionObj.targetWord = word.en;
-      questionObj.correctAnswer = word.uz;
+      if (isIrr) {
+        questionObj.promptText = `"${word.uz}" fe'lining V1 (Infinitive) shaklini yozing:`;
+        questionObj.targetWord = word.uz;
+        questionObj.correctAnswer = word.v1;
+      } else {
+        questionObj.promptText = `"${word.en}" so'zining o'zbekcha tarjimasini yozing:`;
+        questionObj.targetWord = word.en;
+        questionObj.correctAnswer = word.uz;
+      }
     }
 
     generated.push(questionObj);
@@ -999,8 +1406,23 @@ function generateQuestionsForWords(wordsList, mode) {
 
 function generateOptions(correctVal, lang, pool = state.words) {
   const options = [correctVal];
-  const list = pool.map(w => lang === 'uz' ? w.uz : w.en);
-  const filtered = list.filter(item => item !== correctVal);
+
+  let list = [];
+  if (lang === 'uz') {
+    list = [...pool.map(w => w.uz), ...state.words.map(w => w.uz), ...state.irregularVerbs.map(v => v.uz)];
+  } else if (lang === 'v1') {
+    list = [...state.irregularVerbs.map(v => v.v1), ...state.words.map(w => w.en)];
+  } else if (lang === 'v2') {
+    list = [...state.irregularVerbs.map(v => v.v2.split('/')[0].trim())];
+  } else if (lang === 'v3') {
+    list = [...state.irregularVerbs.map(v => v.v3.split('/')[0].trim())];
+  } else if (lang === 'irr_full') {
+    list = state.irregularVerbs.map(v => `${v.v1} - ${v.v2} - ${v.v3}`);
+  } else {
+    list = [...pool.map(w => w.en || w.v1), ...state.words.map(w => w.en), ...state.irregularVerbs.map(v => v.v1)];
+  }
+
+  const filtered = list.filter(item => item && item.toLowerCase().trim() !== correctVal.toLowerCase().trim());
   const shuffled = shuffleArray([...new Set(filtered)]);
 
   for (let i = 0; i < Math.min(3, shuffled.length); i++) {
@@ -1008,7 +1430,7 @@ function generateOptions(correctVal, lang, pool = state.words) {
   }
 
   if (options.length < 4) {
-    const fallbackList = state.words.map(w => lang === 'uz' ? w.uz : w.en).filter(item => !options.includes(item));
+    const fallbackList = state.irregularVerbs.map(v => v.v1).filter(item => !options.includes(item));
     const fallbackShuffled = shuffleArray([...new Set(fallbackList)]);
     for (let i = 0; i < fallbackShuffled.length && options.length < 4; i++) {
       options.push(fallbackShuffled[i]);
@@ -1016,7 +1438,7 @@ function generateOptions(correctVal, lang, pool = state.words) {
   }
 
   while (options.length < 4) {
-    options.push(lang === 'uz' ? "tarjima_" + options.length : "word_" + options.length);
+    options.push(lang === 'uz' ? "variant_" + options.length : "word_" + options.length);
   }
 
   return shuffleArray(options);
@@ -1110,7 +1532,7 @@ function renderCurrentQuestion() {
       const miniBoxes = miniCabinet.querySelectorAll(".mini-box");
       miniBoxes.forEach(boxEl => {
         boxEl.classList.remove("active");
-        if (question && question.word && parseInt(boxEl.getAttribute("data-box")) === question.word.box) {
+        if (question && question.word && parseInt(boxEl.getAttribute("data-box")) === (question.word.box || 1)) {
           boxEl.classList.add("active");
         }
       });
@@ -1125,6 +1547,7 @@ function renderCurrentQuestion() {
 
   if (question.type === 'flashcard') {
     const word = question.word;
+    const isIrr = word.isIrregular || word.unit === 'irregular' || !!word.v1;
     const lm = session.langMode || 'mixed';
     let isEnFront = true;
     if (lm === 'en') {
@@ -1135,28 +1558,60 @@ function renderCurrentQuestion() {
       isEnFront = (typeof question.isEnFront === 'boolean') ? question.isEnFront : (session.currentIndex % 2 === 0);
     }
 
-    const frontTitle = isEnFront ? "Inglizcha" : "O'zbekcha";
-    const frontWord = isEnFront ? word.en : word.uz;
-    const backTitle = isEnFront ? "O'zbekcha tarjimasi" : "Inglizcha tarjimasi";
-    const backWord = isEnFront ? word.uz : word.en;
-
-    html += `
-      <div class="flashcard-wrapper">
-        <div class="flashcard" id="flashcard-element">
-          <div class="flashcard-front">
-            <span class="flashcard-title">${frontTitle}</span>
-            <div class="flashcard-word">${frontWord}</div>
-            <div class="flashcard-hint">${Icons.refresh} Aylantirish uchun bosing</div>
-          </div>
-          <div class="flashcard-back">
-            <span class="flashcard-title">${backTitle}</span>
-            <div class="flashcard-word">${backWord}</div>
-            ${word.example ? `<div class="flashcard-example">"${word.example}"</div>` : ''}
-            <div class="flashcard-hint">${Icons.volume} Talaffuz qilish</div>
+    if (isIrr) {
+      html += `
+        <div class="flashcard-wrapper">
+          <div class="flashcard" id="flashcard-element">
+            <div class="flashcard-front">
+              <span class="flashcard-title">⚡ Noto'g'ri fe'l · O'zbekcha</span>
+              <div class="flashcard-word">${word.uz}</div>
+              <div class="flashcard-hint">${Icons.refresh} 3 ta shaklini ko'rish uchun bosing</div>
+            </div>
+            <div class="flashcard-back irregular-fc-back">
+              <span class="flashcard-title">${word.uz}</span>
+              <div class="irr-flashcard-grid">
+                <div class="irr-fc-box box-v1">
+                  <span class="fc-lbl">V1 (Infinitive)</span>
+                  <span class="fc-val">${word.v1}</span>
+                </div>
+                <div class="irr-fc-box box-v2">
+                  <span class="fc-lbl">V2 (Past Simple)</span>
+                  <span class="fc-val">${word.v2}</span>
+                </div>
+                <div class="irr-fc-box box-v3">
+                  <span class="fc-lbl">V3 (Past Participle)</span>
+                  <span class="fc-val">${word.v3}</span>
+                </div>
+              </div>
+              <div class="flashcard-hint">${Icons.volume} Ketma-ket talaffuz qilish</div>
+            </div>
           </div>
         </div>
-      </div>
-    `;
+      `;
+    } else {
+      const frontTitle = isEnFront ? "Inglizcha" : "O'zbekcha";
+      const frontWord = isEnFront ? word.en : word.uz;
+      const backTitle = isEnFront ? "O'zbekcha tarjimasi" : "Inglizcha tarjimasi";
+      const backWord = isEnFront ? word.uz : word.en;
+
+      html += `
+        <div class="flashcard-wrapper">
+          <div class="flashcard" id="flashcard-element">
+            <div class="flashcard-front">
+              <span class="flashcard-title">${frontTitle}</span>
+              <div class="flashcard-word">${frontWord}</div>
+              <div class="flashcard-hint">${Icons.refresh} Aylantirish uchun bosing</div>
+            </div>
+            <div class="flashcard-back">
+              <span class="flashcard-title">${backTitle}</span>
+              <div class="flashcard-word">${backWord}</div>
+              ${word.example ? `<div class="flashcard-example">"${word.example}"</div>` : ''}
+              <div class="flashcard-hint">${Icons.volume} Talaffuz qilish</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
 
     wrapper.innerHTML = html;
 
@@ -1165,7 +1620,14 @@ function renderCurrentQuestion() {
       flashcardEl.addEventListener("click", () => {
         flashcardEl.classList.toggle("flipped");
         if (flashcardEl.classList.contains("flipped")) {
-          speakWord(word.en);
+          if (isIrr) {
+            const clean1 = word.v1.split('/')[0].trim();
+            const clean2 = word.v2.split('/')[0].trim();
+            const clean3 = word.v3.split('/')[0].trim();
+            speakWord(`${clean1}... ${clean2}... ${clean3}`);
+          } else {
+            speakWord(word.en);
+          }
         }
       });
     }
@@ -1687,6 +2149,25 @@ function checkAnswer() {
 }
 
 function updateWordLeitner(wordObj, isCorrect) {
+  if (wordObj.isIrregular || (typeof wordObj.unit === 'string' && wordObj.unit.startsWith('irregular')) || wordObj.v1) {
+    const idx = state.irregularVerbs.findIndex(w => w.id === wordObj.id || w.v1 === wordObj.v1);
+    if (idx !== -1) {
+      const v = state.irregularVerbs[idx];
+      if (isCorrect) {
+        v.box = Math.min(5, (v.box || 1) + 1);
+      } else {
+        v.box = 1;
+      }
+      const intervals = { 1: 1, 2: 2, 3: 4, 4: 8, 5: 16 };
+      const addDaysCount = intervals[v.box] || 1;
+      const nextDate = new Date();
+      nextDate.setDate(nextDate.getDate() + addDaysCount);
+      v.nextReviewDate = nextDate.toISOString();
+      saveIrregularVerbs();
+    }
+    return;
+  }
+
   const idx = state.words.findIndex(w => w.id === wordObj.id);
   if (idx === -1) return;
 
@@ -1695,7 +2176,7 @@ function updateWordLeitner(wordObj, isCorrect) {
   if (isCorrect) {
     w.box = Math.min(5, (w.box || 1) + 1);
   } else {
-    w.box = w.box || 1;
+    w.box = 1;
   }
 
   const intervals = { 1: 1, 2: 2, 3: 4, 4: 8, 5: 16 };
@@ -1816,9 +2297,11 @@ function exitSession() {
 // ================= APP INITIALIZATION =================
 document.addEventListener("DOMContentLoaded", async () => {
   await loadData();
+  await loadIrregularVerbs();
 
   initNavigation();
   initVocabControls();
+  initIrregularVerbsControls();
   initExerciseControls();
 
   updateLeitnerBoxProgress();
