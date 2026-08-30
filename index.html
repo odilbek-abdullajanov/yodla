@@ -364,7 +364,7 @@
           </button>
         </div>
 
-        <div class="vocab-controls">
+        <div class="vocab-controls vocab-controls-3col">
           <div class="search-wrapper">
             <span class="search-icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -372,6 +372,11 @@
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg></span>
             <input type="text" id="search-input" placeholder="So'z qidirish...">
+          </div>
+          <div class="filter-wrapper">
+            <select id="unit-filter">
+              <option value="all">Barcha unitlar</option>
+            </select>
           </div>
           <div class="filter-wrapper">
             <select id="box-filter">
@@ -388,9 +393,9 @@
         <div class="vocab-grid" id="vocab-grid-list"></div>
 
         <div class="modal-overlay" id="add-word-modal">
-          <div class="modal-card">
+          <div class="modal-card modal-card-wide">
             <div class="modal-header">
-              <h3>Yangi so'z qo'shish</h3>
+              <h3>So'z qo'shish</h3>
               <button class="btn-close-modal" id="btn-close-modal">
                 <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
@@ -399,18 +404,42 @@
                 </svg>
               </button>
             </div>
-            <form id="add-word-form">
-              <div class="form-group">
-                <label for="word-en">Inglizcha so'z *</label>
-                <input type="text" id="word-en" required placeholder="Masalan: challenge">
-              </div>
-              <div class="form-group">
-                <label for="word-uz">O'zbekcha tarjimasi *</label>
-                <input type="text" id="word-uz" required placeholder="Masalan: qiyinchilik">
+
+            <!-- Tab tugmalari -->
+            <div class="add-word-tabs" id="add-word-tabs">
+              <button type="button" class="add-word-tab-btn active" data-tab="add-word-form">
+                ✏️ Qo'lda kiritish
+              </button>
+              <button type="button" class="add-word-tab-btn" data-tab="import-form">
+                📄 PDF / Matn import
+              </button>
+            </div>
+
+            <!-- ============ 1-TAB: QO'LDA KIRITISH ============ -->
+            <form id="add-word-form" class="add-word-tab-panel active">
+              <div class="form-row-2col">
+                <div class="form-group">
+                  <label for="word-en">Inglizcha so'z *</label>
+                  <input type="text" id="word-en" required placeholder="Masalan: challenge">
+                </div>
+                <div class="form-group">
+                  <label for="word-uz">O'zbekcha tarjimasi *</label>
+                  <input type="text" id="word-uz" required placeholder="Masalan: qiyinchilik">
+                </div>
               </div>
               <div class="form-group">
                 <label for="word-example">Misol jumla (ixtiyoriy)</label>
                 <textarea id="word-example" rows="2" placeholder="Life is full of challenges."></textarea>
+              </div>
+              <div class="form-row-2col">
+                <div class="form-group">
+                  <label for="word-unit-select">Qaysi unitga qo'shilsin? *</label>
+                  <select id="word-unit-select" class="unit-select"></select>
+                </div>
+                <div class="form-group" id="word-new-unit-group" style="display: none;">
+                  <label for="word-new-unit-name">Yangi unit nomi *</label>
+                  <input type="text" id="word-new-unit-name" placeholder="Masalan: Unit 7 — Travel">
+                </div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="btn-cancel-modal">
@@ -418,6 +447,83 @@
                 </button>
                 <button type="submit" class="btn btn-primary">
                   <span class="btn-content">Qo'shish</span>
+                </button>
+              </div>
+            </form>
+
+            <!-- ============ 2-TAB: PDF / MATN IMPORT ============ -->
+            <form id="import-form" class="add-word-tab-panel">
+              <div class="import-mode-switch">
+                <label class="import-mode-option">
+                  <input type="radio" name="import-mode" value="single" checked>
+                  <span>
+                    <b>Bitta faylda juftliklar</b>
+                    <small>Har qatorda: <code>word - tarjima</code></small>
+                  </span>
+                </label>
+                <label class="import-mode-option">
+                  <input type="radio" name="import-mode" value="separate">
+                  <span>
+                    <b>Alohida fayllar</b>
+                    <small>Inglizcha va o'zbekcha 2 ta faylda</small>
+                  </span>
+                </label>
+              </div>
+
+              <!-- Rejim 1: juftliklar bitta faylda -->
+              <div class="import-mode-block" id="import-single-block">
+                <div class="form-group">
+                  <label for="import-file-single">PDF yoki TXT fayl (so'z juftliklari bilan)</label>
+                  <input type="file" id="import-file-single" accept=".pdf,.txt,application/pdf,text/plain">
+                  <p class="field-hint">Har bir qator: <code>word - tarjima</code>, <code>word: tarjima</code> yoki
+                    <code>word, tarjima</code>. Faylda <b>"Unit 1"</b> kabi sarlavhalar bo'lsa — har biri alohida unit
+                    sifatida qo'shiladi.</p>
+                </div>
+                <div class="form-group">
+                  <label for="import-text">Yoki matnni shu yerga yopishtiring (ixtiyoriy)</label>
+                  <textarea id="import-text" rows="4"
+                    placeholder="afraid - qo'rqmoq&#10;agree - rozi bo'lmoq"></textarea>
+                </div>
+              </div>
+
+              <!-- Rejim 2: inglizcha va o'zbekcha alohida fayllarda -->
+              <div class="import-mode-block" id="import-separate-block" style="display: none;">
+                <div class="form-row-2col">
+                  <div class="form-group">
+                    <label for="import-file-en">🇬🇧 Inglizcha so'zlar fayli</label>
+                    <input type="file" id="import-file-en" accept=".pdf,.txt,application/pdf,text/plain">
+                  </div>
+                  <div class="form-group">
+                    <label for="import-file-uz">🇺🇿 O'zbekcha tarjimalar fayli</label>
+                    <input type="file" id="import-file-uz" accept=".pdf,.txt,application/pdf,text/plain">
+                  </div>
+                </div>
+                <p class="field-hint">Qatorlar tartib bo'yicha juftlashadi: inglizcha 1-qator ↔ o'zbekcha 1-qator,
+                  2-qator ↔ 2-qator va h.k. Har bir faylda qatorda bitta so'z bo'lishi kerak.</p>
+              </div>
+
+              <div class="form-row-2col">
+                <div class="form-group">
+                  <label for="import-unit-select">Qaysi unitga qo'shilsin?</label>
+                  <select id="import-unit-select" class="unit-select"></select>
+                </div>
+                <div class="form-group" id="import-new-unit-group" style="display: none;">
+                  <label for="import-new-unit-name">Yangi unit nomi *</label>
+                  <input type="text" id="import-new-unit-name" placeholder="Masalan: Unit 7 — Travel">
+                </div>
+              </div>
+
+              <div class="import-preview" id="import-preview" style="display: none;"></div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btn-cancel-import">
+                  <span class="btn-content">Bekor</span>
+                </button>
+                <button type="button" class="btn btn-secondary" id="btn-parse-import">
+                  <span class="btn-content">🔍 Tekshirish</span>
+                </button>
+                <button type="button" class="btn btn-primary" id="btn-confirm-import" disabled>
+                  <span class="btn-content">Import qilish</span>
                 </button>
               </div>
             </form>
@@ -631,6 +737,8 @@
     </main>
   </div>
 
+  <!-- PDF fayllardan matn ajratib olish uchun (pdf.js) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="app.js"></script>
 </body>
 

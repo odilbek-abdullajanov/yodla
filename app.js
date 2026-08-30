@@ -227,6 +227,8 @@ const defaultIrregularVerbs = [
 
 const WORDS_PER_UNIT = 20;
 const TOTAL_UNITS = 6;
+const CUSTOM_UNITS_KEY = 'yodla-custom-units-v1';
+const NEW_UNIT_VALUE = '__new__';
 
 // ================= SVG ICONS =================
 const Icons = {
@@ -304,6 +306,7 @@ const SoundEffects = {
 let state = {
   words: [],
   irregularVerbs: [],
+  customUnits: [],
   xp: 0,
   streak: 0,
   lastActiveDate: null
@@ -363,6 +366,180 @@ function getUnitForIndex(idx) {
   return Math.floor(idx / WORDS_PER_UNIT) + 1;
 }
 
+// ================= CUSTOM UNITS =================
+function nextCustomUnitId() {
+  return 'custom_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+}
+
+async function loadCustomUnits() {
+  const local = await StorageHelper.get(CUSTOM_UNITS_KEY);
+  state.customUnits = Array.isArray(local) ? local.filter(u => u && u.id && u.name) : [];
+}
+
+function saveCustomUnits() {
+  return StorageHelper.set(CUSTOM_UNITS_KEY, state.customUnits);
+}
+
+function createCustomUnit(name) {
+  const cleanName = (name || '').trim() || ('Yangi unit ' + (state.customUnits.length + 1));
+  const unit = {
+    id: nextCustomUnitId(),
+    name: cleanName,
+    createdAt: new Date().toISOString()
+  };
+  state.customUnits.push(unit);
+  return unit;
+}
+
+function getCustomUnitById(id) {
+  return state.customUnits.find(u => u.id === id) || null;
+}
+
+function getUnitLabel(unit) {
+  if (unit === null || unit === undefined) return 'Unit 1';
+  if (typeof unit === 'number') return 'Unit ' + unit;
+  if (typeof unit === 'string') {
+    if (unit === 'irregular_1') return "Fe'llar 1";
+    if (unit === 'irregular_2') return "Fe'llar 2";
+    if (unit.startsWith('custom_')) {
+      const cu = getCustomUnitById(unit);
+      return cu ? cu.name : 'Custom unit';
+    }
+    return unit;
+  }
+  return String(unit);
+}
+
+function getAllUnitOptions() {
+  const options = [];
+  for (let i = 1; i <= TOTAL_UNITS; i++) {
+    options.push({ value: String(i), label: 'Unit ' + i });
+  }
+  state.customUnits.forEach(u => options.push({ value: u.id, label: u.name }));
+  return options;
+}
+
+function populateUnitSelect(selectEl, includeNewOption) {
+  if (!selectEl) return;
+  const prevValue = selectEl.value;
+  selectEl.innerHTML = '';
+
+  getAllUnitOptions().forEach(opt => {
+    const o = document.createElement('option');
+    o.value = opt.value;
+    o.textContent = opt.label;
+    selectEl.appendChild(o);
+  });
+
+  if (includeNewOption) {
+    const o = document.createElement('option');
+    o.value = NEW_UNIT_VALUE;
+    o.textContent = '➕ Yangi unit yarating...';
+    selectEl.appendChild(o);
+  }
+
+  const stillExists = Array.from(selectEl.options).some(o => o.value === prevValue);
+  selectEl.value = stillExists ? prevValue : selectEl.options[0].value;
+}
+
+function populateUnitFilter() {
+  const filter = document.getElementById('unit-filter');
+  if (!filter) return;
+  const prevValue = filter.value || 'all';
+  filter.innerHTML = '';
+
+  const allOpt = document.createElement('option');
+  allOpt.value = 'all';
+  allOpt.textContent = 'Barcha unitlar';
+  filter.appendChild(allOpt);
+
+  getAllUnitOptions().forEach(opt => {
+    const o = document.createElement('option');
+    o.value = opt.value;
+    o.textContent = opt.label;
+    filter.appendChild(o);
+  });
+
+  const stillExists = Array.from(filter.options).some(o => o.value === prevValue);
+  filter.value = stillExists ? prevValue : 'all';
+}
+
+function renderCustomUnitCheckboxes() {
+  const grid = document.getElementById('unit-checkbox-grid');
+  if (!grid) return;
+
+  grid.querySelectorAll('.custom-unit-checkbox-label').forEach(el => el.remove());
+
+  const firstIrregular = grid.querySelector('.unit-checkbox-irregular');
+
+  state.customUnits.forEach(unit => {
+    const label = document.createElement('label');
+    label.className = 'unit-checkbox-label custom-unit-checkbox-label';
+
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.className = 'unit-checkbox';
+    input.value = unit.id;
+    input.addEventListener('change', () => updateLeitnerBoxProgress());
+
+    const chip = document.createElement('span');
+    chip.className = 'unit-checkbox-custom custom-unit-chip';
+    chip.textContent = unit.name;
+    chip.title = unit.name;
+
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.className = 'custom-unit-delete-btn';
+    delBtn.setAttribute('data-id', unit.id);
+    delBtn.title = "Unitni o'chirish";
+    delBtn.innerHTML = '✕';
+    delBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      deleteCustomUnit(unit.id);
+    });
+
+    label.appendChild(input);
+    label.appendChild(chip);
+    label.appendChild(delBtn);
+
+    if (firstIrregular) {
+      grid.insertBefore(label, firstIrregular);
+    } else {
+      grid.appendChild(label);
+    }
+  });
+}
+
+async function deleteCustomUnit(unitId) {
+  const unit = getCustomUnitById(unitId);
+  if (!unit) return;
+
+  const wordsInUnit = state.words.filter(w => w.unit === unitId);
+  const msg = `"${unit.name}" uniti o'chirilsinmi?\n\nBu unitdagi ${wordsInUnit.length} ta so'z ham o'chiriladi. Bu amalni qaytarib bo'lmaydi!`;
+  if (!confirm(msg)) return;
+
+  state.words = state.words.filter(w => w.unit !== unitId);
+  state.customUnits = state.customUnits.filter(u => u.id !== unitId);
+
+  if (vocabUnitFilter === unitId) {
+    vocabUnitFilter = 'all';
+  }
+
+  await saveData();
+  await saveCustomUnits();
+  refreshUnitUI();
+  renderVocabList();
+}
+
+function refreshUnitUI() {
+  populateUnitSelect(document.getElementById('word-unit-select'), true);
+  populateUnitSelect(document.getElementById('import-unit-select'), true);
+  populateUnitFilter();
+  renderCustomUnitCheckboxes();
+  updateLeitnerBoxProgress();
+}
+
 async function loadData() {
   const localWords = await StorageHelper.get(STORAGE_KEY);
   const localXp = localStorage.getItem("yodla_xp");
@@ -374,8 +551,9 @@ async function loadData() {
   if ((localWords && Array.isArray(localWords) && localWords.length > 0) || (oldWords && oldWords.length > 0)) {
     const sourceWords = localWords && localWords.length > 0 ? localWords : oldWords;
 
-    const defaultEnSet = new Set(defaultWords.map(dw => dw.en.toLowerCase().trim()));
-    let cleanedWords = sourceWords.filter(w => defaultEnSet.has(w.en.toLowerCase().trim()));
+    // MUHIM: foydalanuvchi qo'shgan so'zlar (default lug'atda yo'qlar) ham saqlanib qoladi.
+    // Faqat yaroqsiz yozuvlar (bo'sh en/uz) tozalanadi.
+    let cleanedWords = sourceWords.filter(w => w && typeof w.en === 'string' && w.en.trim() && typeof w.uz === 'string' && w.uz.trim());
 
     const existingEn = new Set(cleanedWords.map(w => w.en.toLowerCase().trim()));
     const missingDefaults = defaultWords.filter(dw => !existingEn.has(dw.en.toLowerCase().trim()));
@@ -403,11 +581,12 @@ async function loadData() {
       if (!w.nextReview) w.nextReview = w.nextReviewDate;
 
       const defaultIdx = defaultWords.findIndex(dw => dw.en.toLowerCase().trim() === w.en.toLowerCase().trim());
-      if (defaultIdx !== -1) {
+      if (defaultIdx !== -1 && (w.unit === undefined || w.unit === null)) {
+        // Unit hali belgilanmagan default so'z — avtomatik unit beriladi
         w.unit = getUnitForIndex(defaultIdx);
         delete w.synonyms;
-      } else {
-        if (!w.unit) w.unit = 1;
+      } else if (!w.unit) {
+        w.unit = 1;
       }
       return w;
     });
@@ -535,6 +714,7 @@ function getSelectedUnits() {
   return Array.from(checkboxes).map(cb => {
     const val = cb.value;
     if (val === 'irregular_1' || val === 'irregular_2' || val === 'irregular') return val;
+    if (typeof val === 'string' && val.startsWith('custom_')) return val;
     return parseInt(val);
   });
 }
@@ -548,6 +728,11 @@ function getFilteredPool() {
   const numericUnits = selected.filter(s => typeof s === 'number');
   if (numericUnits.length > 0) {
     pool.push(...state.words.filter(w => numericUnits.includes(w.unit)));
+  }
+
+  const customUnitIds = selected.filter(s => typeof s === 'string' && s.startsWith('custom_'));
+  if (customUnitIds.length > 0) {
+    pool.push(...state.words.filter(w => customUnitIds.includes(w.unit)));
   }
 
   if (selected.includes('irregular_1')) {
@@ -712,15 +897,20 @@ function getRandomGreeting() {
 // ================= VOCABULARY MANAGEMENT =================
 let vocabSearchQuery = "";
 let vocabBoxFilter = "all";
+let vocabUnitFilter = "all";
 
 function initVocabControls() {
   const searchInput = document.getElementById("search-input");
   const boxFilter = document.getElementById("box-filter");
+  const unitFilter = document.getElementById("unit-filter");
   const openAddBtn = document.getElementById("btn-open-add-modal");
   const closeAddBtn = document.getElementById("btn-close-modal");
   const cancelAddBtn = document.getElementById("btn-cancel-modal");
   const addForm = document.getElementById("add-word-form");
   const addModal = document.getElementById("add-word-modal");
+  const unitSelect = document.getElementById("word-unit-select");
+  const newUnitGroup = document.getElementById("word-new-unit-group");
+  const newUnitName = document.getElementById("word-new-unit-name");
 
   const unitCheckboxes = document.querySelectorAll('.unit-checkbox');
   unitCheckboxes.forEach(cb => {
@@ -743,6 +933,13 @@ function initVocabControls() {
     });
   }
 
+  if (unitFilter) {
+    unitFilter.addEventListener("change", (e) => {
+      vocabUnitFilter = e.target.value;
+      renderVocabList();
+    });
+  }
+
   if (openAddBtn) {
     openAddBtn.addEventListener("click", () => {
       addModal.classList.add("active");
@@ -752,37 +949,71 @@ function initVocabControls() {
   const closeModalFunc = () => {
     addModal.classList.remove("active");
     addForm.reset();
+    resetImportUI();
   };
 
   if (closeAddBtn) closeAddBtn.addEventListener("click", closeModalFunc);
   if (cancelAddBtn) cancelAddBtn.addEventListener("click", closeModalFunc);
 
+  // Yangi unit tanlanganda nom kiritish maydonini ko'rsatish
+  if (unitSelect) {
+    unitSelect.addEventListener("change", () => {
+      const isNew = unitSelect.value === NEW_UNIT_VALUE;
+      if (newUnitGroup) newUnitGroup.style.display = isNew ? 'block' : 'none';
+      if (newUnitName) newUnitName.required = isNew;
+    });
+  }
+
   if (addForm) {
-    addForm.addEventListener("submit", (e) => {
+    addForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const en = document.getElementById("word-en").value.trim();
       const uz = document.getElementById("word-uz").value.trim();
       const example = document.getElementById("word-example").value.trim();
 
+      // Unitni aniqlash (mavjud unit yoki yangi unit)
+      let unitValue = unitSelect ? unitSelect.value : '1';
+      if (unitValue === NEW_UNIT_VALUE) {
+        const name = newUnitName ? newUnitName.value.trim() : '';
+        if (!name) {
+          alert("Iltimos, yangi unit uchun nom kiriting!");
+          if (newUnitName) newUnitName.focus();
+          return;
+        }
+        const created = createCustomUnit(name);
+        await saveCustomUnits();
+        unitValue = created.id;
+      }
+
       if (en && uz) {
+        const duplicate = state.words.find(w => (w.en || '').toLowerCase().trim() === en.toLowerCase().trim());
+        if (duplicate && !confirm(`"${en}" so'zi allaqachon lug'atda bor (${getUnitLabel(duplicate.unit)}). Baribir qo'shamizmi?`)) {
+          return;
+        }
+
+        const now = new Date().toISOString();
         const newWord = {
           id: "word_" + Date.now(),
           en: en,
           uz: uz,
           example: example,
           box: 1,
-          unit: 1,
-          nextReviewDate: new Date().toISOString()
+          unit: isNaN(parseInt(unitValue, 10)) ? unitValue : parseInt(unitValue, 10),
+          nextReviewDate: now,
+          nextReview: now
         };
         state.words.unshift(newWord);
-        saveData();
-        updateLeitnerBoxProgress();
+        await saveData();
+        refreshUnitUI();
         closeModalFunc();
         renderVocabList();
-        alert(`"${en}" so'zi muvaffaqiyatli qo'shildi!`);
+        alert(`"${en}" so'zi "${getUnitLabel(newWord.unit)}" unitiga muvaffaqiyatli qo'shildi!`);
       }
     });
   }
+
+  // PDF / Matn import boshqaruvlari
+  initImportControls(closeModalFunc);
 }
 
 function renderVocabList() {
@@ -794,7 +1025,8 @@ function renderVocabList() {
   const filteredWords = state.words.filter(w => {
     const matchesSearch = w.en.toLowerCase().includes(vocabSearchQuery) || w.uz.toLowerCase().includes(vocabSearchQuery);
     const matchesBox = vocabBoxFilter === "all" || w.box.toString() === vocabBoxFilter;
-    return matchesSearch && matchesBox;
+    const matchesUnit = vocabUnitFilter === "all" || String(w.unit) === vocabUnitFilter;
+    return matchesSearch && matchesBox && matchesUnit;
   });
 
   if (filteredWords.length === 0) {
@@ -827,7 +1059,7 @@ function renderVocabList() {
         <div class="leitner-level-badge">
           ${levelDotsHTML}
         </div>
-        <span class="box-number-badge">Unit ${word.unit} · ${word.box}-quti</span>
+        <span class="box-number-badge">${getUnitLabel(word.unit)} · ${word.box}-quti</span>
       </div>
     `;
 
@@ -846,6 +1078,578 @@ function renderVocabList() {
     });
 
     listContainer.appendChild(card);
+  });
+}
+
+// ================= WORD IMPORT: PDF / TEXT PARSING =================
+let parsedImportData = null;
+
+const PDFJS_WORKER_URL = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+function escapeHtml(str) {
+  return String(str === null || str === undefined ? '' : str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function ensurePdfJs() {
+  if (!window.pdfjsLib) {
+    throw new Error("PDF kutubxonasi yuklanmagan. Internet aloqasini tekshiring yoki .txt fayl / matn kiritishdan foydalaning.");
+  }
+  if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_URL;
+  }
+  return window.pdfjsLib;
+}
+
+// PDF dagi matn qatorlarini ajratib olish (pdf.js itemlarini Y koordinata bo'yicha qatorlarga guruhlaydi)
+function groupPdfItemsIntoLines(items) {
+  const positioned = items
+    .filter(it => it && typeof it.str === 'string' && it.str.length > 0)
+    .map(it => ({
+      x: it.transform[4],
+      y: it.transform[5],
+      width: it.width || 0,
+      str: it.str
+    }));
+
+  if (positioned.length === 0) return [];
+
+  // Yuqoridan pastga, chapdan o'ngga tartiblash
+  positioned.sort((a, b) => {
+    if (Math.abs(a.y - b.y) > 2) return b.y - a.y;
+    return a.x - b.x;
+  });
+
+  const lines = [];
+  let currentLine = [];
+  let currentY = positioned[0].y;
+
+  const flushLine = () => {
+    if (currentLine.length === 0) return;
+    currentLine.sort((a, b) => a.x - b.x);
+    let text = "";
+    let prev = null;
+    for (const item of currentLine) {
+      if (prev) {
+        const gap = item.x - (prev.x + prev.width);
+        const needsSpace = gap > 1 && !/\s$/.test(text) && !/^\s/.test(item.str);
+        if (needsSpace) text += " ";
+      }
+      text += item.str;
+      prev = item;
+    }
+    const cleaned = text.replace(/\s+/g, ' ').trim();
+    if (cleaned) lines.push(cleaned);
+    currentLine = [];
+  };
+
+  for (const item of positioned) {
+    if (Math.abs(item.y - currentY) > 2) {
+      flushLine();
+      currentY = item.y;
+    }
+    currentLine.push(item);
+  }
+  flushLine();
+
+  return lines;
+}
+
+// Fayldan qatorlar ro'yxatini olish (PDF yoki TXT)
+async function extractLinesFromFile(file) {
+  const isTxt = /\.txt$/i.test(file.name) || (file.type && file.type.startsWith('text/'));
+  const isPdf = /\.pdf$/i.test(file.name) || file.type === 'application/pdf';
+
+  if (isTxt) {
+    const text = await file.text();
+    return text.split(/\r?\n/);
+  }
+
+  if (isPdf) {
+    const pdfjs = ensurePdfJs();
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
+    const lines = [];
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      const page = await pdf.getPage(pageNum);
+      const textContent = await page.getTextContent();
+      lines.push(...groupPdfItemsIntoLines(textContent.items));
+    }
+    return lines;
+  }
+
+  // Noma'lum format — matn sifatida o'qib ko'ramiz
+  const text = await file.text();
+  return text.split(/\r?\n/);
+}
+
+// Qatorni tozalash: "1. word" → "word", "- word" → "word", tipografik belgilarni normalizatsiya qilish
+function cleanImportLine(line) {
+  let l = String(line || '').trim();
+  // Word/Google Docs PDF'larida ko'p uchraydigan tipografik belgilar → oddiy belgilar
+  l = l.replace(/[\u2018\u2019\u02BC]/g, "'");   // ' ’ ʼ → '
+  l = l.replace(/[\u201C\u201D]/g, '"');          // " " → "
+  l = l.replace(/[\u00A0\u202F]/g, ' ');          // no-break space → oddiy probel
+  l = l.replace(/\u2013|\u2014/g, '-');           // – — → -
+  l = l.replace(/^\(?\d{1,3}[\.\)]\s*/, '');
+  l = l.replace(/^[-–—•*·]\s+/, '');
+  return l.trim();
+}
+
+// "Unit 3" / "unit: 3" / "3-unit" kabi sarlavhalarni aniqlash
+const UNIT_HEADER_PATTERNS = [
+  /^\s*unit\s*[\s\-–—:.]*\s*(\d{1,3})\s*$/i,
+  /^\s*(\d{1,3})\s*[\s\-–—.]*\s*unit\s*$/i
+];
+
+function getUnitHeaderText(line) {
+  for (const re of UNIT_HEADER_PATTERNS) {
+    const m = line.match(re);
+    if (m) {
+      const num = parseInt(m[1], 10);
+      return { number: num, title: 'Unit ' + num };
+    }
+  }
+  return null;
+}
+
+function validatePair(en, uz, example) {
+  if (!en || !uz) {
+    return { status: 'skipped', reason: "So'z yoki tarjima ajratib olinmadi" };
+  }
+  if (!/[a-zA-Z]/.test(en)) {
+    return { status: 'skipped', reason: "Inglizcha so'z topilmadi" };
+  }
+  return { status: 'pair', en: en, uz: uz, example: example || '' };
+}
+
+// Bitta qatorni "en - uz" juftlikka aylantirish (turli ajratgichlarni qo'llaydi)
+function parsePairLine(rawLine) {
+  const line = cleanImportLine(rawLine);
+  if (!line) return { status: 'empty' };
+
+  const header = getUnitHeaderText(line);
+  if (header) return { status: 'header', header: header };
+
+  const separators = [
+    { re: /\s+[-–—]\s+/ },   // word - tarjima
+    { re: /\t+/ },           // word<TAB>tarjima
+    { re: /\s*=\s*/ },       // word = tarjima
+    { re: /\s*[:：]\s+/ },   // word: tarjima
+    { re: /\s*\|\s*/ },      // word | tarjima
+    { re: /;\s*/ }           // word; tarjima
+  ];
+
+  for (const sep of separators) {
+    if (sep.re.test(line)) {
+      const parts = line.split(sep.re).map(p => p.trim()).filter(Boolean);
+      if (parts.length >= 2) {
+        const en = parts[0];
+        const rest = parts.slice(1);
+        const uz = rest[0] || '';
+        const example = rest.length > 1 ? rest.slice(1).join(' — ') : '';
+        return validatePair(en, uz, example);
+      }
+    }
+  }
+
+  // Vergul — faqat aynan 2 qism bo'lsa (tarjimada vergul bo'lishi mumkin: "tagi, osti")
+  const commaParts = line.split(/\s*,\s*/).map(p => p.trim()).filter(Boolean);
+  if (commaParts.length === 2) {
+    return validatePair(commaParts[0], commaParts[1], '');
+  }
+
+  return { status: 'skipped', reason: "Ajratgich topilmadi (masalan: 'word - tarjima')" };
+}
+
+// Bitta fayl/matn mazmunini parse qilish ("Unit N" bo'limlarini ham aniqlaydi)
+function parseImportText(lines) {
+  // Himoya: to'g'ridan-to'g'ri matn ham qabul qilinadi
+  if (typeof lines === 'string') {
+    lines = lines.split(/\r?\n/);
+  }
+
+  const result = { sections: [], pairs: [], skipped: [], hasHeaders: false };
+  let currentSection = null;
+
+  for (const rawLine of lines) {
+    const line = String(rawLine || '').trim();
+    if (!line) continue;
+
+    const parsed = parsePairLine(line);
+
+    if (parsed.status === 'header') {
+      result.hasHeaders = true;
+      currentSection = { title: parsed.header.title, number: parsed.header.number, pairs: [] };
+      result.sections.push(currentSection);
+      continue;
+    }
+
+    if (parsed.status === 'empty') continue;
+
+    if (parsed.status === 'skipped') {
+      result.skipped.push({ raw: line, reason: parsed.reason });
+      continue;
+    }
+
+    const pair = { en: parsed.en, uz: parsed.uz, example: parsed.example };
+    if (currentSection) currentSection.pairs.push(pair);
+    else result.pairs.push(pair);
+  }
+
+  result.hasHeaders = result.hasHeaders && result.sections.length > 0;
+  return result;
+}
+
+// Alohida inglizcha va o'zbekcha ro'yxatlarni qatorlar bo'yicha juftlash
+function parseSeparateLists(enLines, uzLines) {
+  const clean = (lines) => lines.map(cleanImportLine).filter(l => l && !getUnitHeaderText(l));
+  const en = clean(enLines);
+  const uz = clean(uzLines);
+
+  const pairs = [];
+  const skipped = [];
+  const count = Math.max(en.length, uz.length);
+
+  for (let i = 0; i < count; i++) {
+    const enWord = en[i];
+    const uzWord = uz[i];
+    if (enWord && uzWord) {
+      const res = validatePair(enWord, uzWord, '');
+      if (res.status === 'pair') {
+        pairs.push({ en: res.en, uz: res.uz, example: '' });
+      } else {
+        skipped.push({ raw: `${enWord} / ${uzWord}`, reason: res.reason });
+      }
+    } else if (enWord || uzWord) {
+      skipped.push({
+        raw: enWord || uzWord,
+        reason: "Juftlik topilmadi (boshqa faylda mos qator yo'q)"
+      });
+    }
+  }
+
+  return { pairs: pairs, skipped: skipped, sections: [], hasHeaders: false, enCount: en.length, uzCount: uz.length };
+}
+
+// ================= WORD IMPORT: UI HANDLERS =================
+function showImportMessage(el, message, type) {
+  const cls = type === 'error' ? 'import-error' : (type === 'info' ? 'import-info' : 'import-warning');
+  el.innerHTML = `<div class="${cls}">${escapeHtml(message)}</div>`;
+  el.style.display = 'block';
+}
+
+function resetImportPreview() {
+  parsedImportData = null;
+  const previewEl = document.getElementById('import-preview');
+  if (previewEl) {
+    previewEl.innerHTML = '';
+    previewEl.style.display = 'none';
+  }
+  const confirmBtn = document.getElementById('btn-confirm-import');
+  if (confirmBtn) confirmBtn.disabled = true;
+}
+
+function resetImportUI() {
+  const importForm = document.getElementById('import-form');
+  if (importForm) importForm.reset();
+  resetImportPreview();
+
+  const singleBlock = document.getElementById('import-single-block');
+  const sepBlock = document.getElementById('import-separate-block');
+  if (singleBlock) singleBlock.style.display = 'block';
+  if (sepBlock) sepBlock.style.display = 'none';
+
+  const importNewGroup = document.getElementById('import-new-unit-group');
+  if (importNewGroup) importNewGroup.style.display = 'none';
+  const wordNewGroup = document.getElementById('word-new-unit-group');
+  if (wordNewGroup) wordNewGroup.style.display = 'none';
+
+  // Birinchi tabni (qo'lda kiritish) faollashtirish
+  document.querySelectorAll('.add-word-tab-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
+  document.querySelectorAll('.add-word-tab-panel').forEach((p, i) => p.classList.toggle('active', i === 0));
+}
+
+function initImportControls(closeModalFunc) {
+  const importForm = document.getElementById('import-form');
+  if (!importForm) return;
+
+  const parseBtn = document.getElementById('btn-parse-import');
+  const confirmBtn = document.getElementById('btn-confirm-import');
+  const cancelBtn = document.getElementById('btn-cancel-import');
+  const previewEl = document.getElementById('import-preview');
+  const unitSelect = document.getElementById('import-unit-select');
+  const newUnitGroup = document.getElementById('import-new-unit-group');
+
+  // Tablarni almashtirish
+  document.querySelectorAll('.add-word-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.add-word-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.add-word-tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const panel = document.getElementById(btn.dataset.tab);
+      if (panel) panel.classList.add('active');
+    });
+  });
+
+  // Import rejimini almashtirish (bitta fayl / alohida fayllar)
+  document.querySelectorAll('input[name="import-mode"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      const mode = document.querySelector('input[name="import-mode"]:checked').value;
+      document.getElementById('import-single-block').style.display = mode === 'single' ? 'block' : 'none';
+      document.getElementById('import-separate-block').style.display = mode === 'separate' ? 'block' : 'none';
+      resetImportPreview();
+    });
+  });
+
+  // Yangi unit tanlanganda nom kiritish maydonini ko'rsatish
+  if (unitSelect) {
+    unitSelect.addEventListener('change', () => {
+      if (newUnitGroup) newUnitGroup.style.display = unitSelect.value === NEW_UNIT_VALUE ? 'block' : 'none';
+    });
+  }
+
+  if (cancelBtn) cancelBtn.addEventListener('click', closeModalFunc);
+
+  // 1-QADAM: fayl/matnni o'qib, natijani ko'rsatish
+  if (parseBtn) {
+    parseBtn.addEventListener('click', async () => {
+      const mode = document.querySelector('input[name="import-mode"]:checked').value;
+      resetImportPreview();
+      previewEl.style.display = 'block';
+
+      try {
+        if (mode === 'single') {
+          const fileInput = document.getElementById('import-file-single');
+          const textArea = document.getElementById('import-text');
+          let lines = [];
+          let sourceLabel = 'matn';
+
+          if (fileInput.files && fileInput.files[0]) {
+            sourceLabel = fileInput.files[0].name;
+            lines = await extractLinesFromFile(fileInput.files[0]);
+          } else if (textArea.value.trim()) {
+            lines = textArea.value.split(/\r?\n/);
+          } else {
+            showImportMessage(previewEl, "Avval fayl tanlang yoki matnni yopishtiring.", 'warning');
+            return;
+          }
+
+          parsedImportData = Object.assign(parseImportText(lines), { mode: 'single', sourceLabel: sourceLabel });
+          renderImportPreview();
+        } else {
+          const enInput = document.getElementById('import-file-en');
+          const uzInput = document.getElementById('import-file-uz');
+          if (!(enInput.files && enInput.files[0]) || !(uzInput.files && uzInput.files[0])) {
+            showImportMessage(previewEl, "Iltimos, ikkala faylni ham tanlang (inglizcha va o'zbekcha).", 'warning');
+            return;
+          }
+          const enLines = await extractLinesFromFile(enInput.files[0]);
+          const uzLines = await extractLinesFromFile(uzInput.files[0]);
+          parsedImportData = Object.assign(
+            parseSeparateLists(enLines, uzLines),
+            { mode: 'separate', sourceLabel: `${enInput.files[0].name} + ${uzInput.files[0].name}` }
+          );
+          renderImportPreview();
+        }
+      } catch (err) {
+        console.error('Import xatoligi:', err);
+        showImportMessage(previewEl, "Xatolik: " + (err.message || "Faylni o'qib bo'lmadi."), 'error');
+      }
+    });
+  }
+
+  // 2-QADAM: importni tasdiqlash
+  attachImportConfirmHandler(closeModalFunc);
+}
+
+function renderImportPreview() {
+  const previewEl = document.getElementById('import-preview');
+  const confirmBtn = document.getElementById('btn-confirm-import');
+  if (!previewEl || !parsedImportData) return;
+
+  const pairs = parsedImportData.pairs || [];
+  const sections = parsedImportData.sections || [];
+  const skipped = parsedImportData.skipped || [];
+  const totalPairs = pairs.length + sections.reduce((s, sec) => s + sec.pairs.length, 0);
+
+  let html = `<div class="import-preview-header">`;
+  html += `<div class="import-preview-title">🔎 Tekshirish natijasi <span class="import-source">(${escapeHtml(parsedImportData.sourceLabel)})</span></div>`;
+
+  if (parsedImportData.mode === 'separate' && parsedImportData.enCount !== parsedImportData.uzCount) {
+    html += `<div class="import-warning">⚠️ Fayllardagi qatorlar soni teng emas (inglizcha: ${parsedImportData.enCount}, o'zbekcha: ${parsedImportData.uzCount}). Faqat mos tushgan juftliklar qo'shiladi.</div>`;
+  }
+
+  if (parsedImportData.hasHeaders) {
+    html += `<div class="import-info">📄 Faylda "Unit N" sarlavhalari topildi — har bir bo'lim <b>alohida unit</b> sifatida qo'shiladi.</div>`;
+  }
+
+  html += `<div class="import-count-badge">${totalPairs} ta juftlik topildi</div></div>`;
+
+  const rowsHtml = (arr) => arr.map((p, i) => `
+    <div class="import-preview-row">
+      <span class="ip-num">${i + 1}</span>
+      <span class="ip-en">${escapeHtml(p.en)}</span>
+      <span class="ip-uz">${escapeHtml(p.uz)}</span>
+      ${p.example ? `<span class="ip-example">${escapeHtml(p.example)}</span>` : ''}
+    </div>`).join('');
+
+  if (sections.length > 0) {
+    sections.forEach(sec => {
+      if (sec.pairs.length === 0) return;
+      html += `<div class="import-section-header">📌 ${escapeHtml(sec.title)} — ${sec.pairs.length} ta so'z</div>`;
+      html += `<div class="import-preview-table">${rowsHtml(sec.pairs)}</div>`;
+    });
+  }
+  if (pairs.length > 0) {
+    html += `<div class="import-preview-table">${rowsHtml(pairs)}</div>`;
+  }
+
+  if (totalPairs === 0) {
+    html += `<div class="import-warning">Hech qanday so'z juftligi topilmadi. Qatorlar <code>word - tarjima</code> shaklida bo'lishi kerak.</div>`;
+  }
+
+  if (skipped.length > 0) {
+    html += `<div class="import-skipped"><details><summary>⏭️ ${skipped.length} ta qator o'tkazib yuborildi (ko'rish uchun bosing)</summary>`;
+    html += skipped.map(s => `<div class="import-skipped-row">${escapeHtml(s.raw)} — <i>${escapeHtml(s.reason)}</i></div>`).join('');
+    html += `</details></div>`;
+  }
+
+  previewEl.innerHTML = html;
+  previewEl.style.display = 'block';
+  confirmBtn.disabled = totalPairs === 0;
+}
+
+// 2-QADAM: tekshirilgan so'zlarni lug'atga qo'shish
+function attachImportConfirmHandler(closeModalFunc) {
+  const confirmBtn = document.getElementById('btn-confirm-import');
+  if (!confirmBtn) return;
+
+  confirmBtn.addEventListener('click', async () => {
+    if (!parsedImportData) return;
+
+    const unitSelectEl = document.getElementById('import-unit-select');
+    const newUnitNameEl = document.getElementById('import-new-unit-name');
+    const createdUnits = [];
+    const createdUnitIds = [];
+    let targetUnitValue = null;
+
+    // Yangi unit nomi kiritildimi? (unit faqat kerak bo'lganda yaratiladi)
+    let pendingNewUnitName = null;
+    if (unitSelectEl.value === NEW_UNIT_VALUE) {
+      pendingNewUnitName = newUnitNameEl.value.trim();
+      if (!pendingNewUnitName) {
+        alert("Yangi unit uchun nom kiriting!");
+        newUnitNameEl.focus();
+        return;
+      }
+    }
+
+    const ensureTargetUnit = () => {
+      if (targetUnitValue !== null) return targetUnitValue;
+      const created = createCustomUnit(pendingNewUnitName || 'Yangi unit');
+      targetUnitValue = created.id;
+      createdUnits.push(created.name);
+      createdUnitIds.push(created.id);
+      return targetUnitValue;
+    };
+
+    const now = new Date().toISOString();
+    const allPairs = [];
+
+    if (parsedImportData.hasHeaders) {
+      // Faylda "Unit N" sarlavhalari bor — har bo'lim alohida unit bo'ladi
+      parsedImportData.sections.forEach(sec => {
+        if (!sec.pairs.length) return;
+        let unitValue;
+        if (sec.number && sec.number >= 1 && sec.number <= TOTAL_UNITS) {
+          unitValue = sec.number; // mavjud default unit
+        } else {
+          const existing = state.customUnits.find(u => u.name.toLowerCase() === sec.title.toLowerCase());
+          if (existing) {
+            unitValue = existing.id;
+          } else {
+            const created = createCustomUnit(sec.title);
+            unitValue = created.id;
+            createdUnits.push(created.name);
+            createdUnitIds.push(created.id);
+          }
+        }
+        sec.pairs.forEach(p => allPairs.push({ en: p.en, uz: p.uz, example: p.example, unit: unitValue }));
+      });
+
+      // Bo'limga kirmagan juftliklar — tanlangan unitga
+      if (parsedImportData.pairs.length) {
+        let fallbackUnit;
+        if (pendingNewUnitName !== null) {
+          fallbackUnit = ensureTargetUnit();
+        } else {
+          fallbackUnit = isNaN(parseInt(unitSelectEl.value, 10)) ? unitSelectEl.value : parseInt(unitSelectEl.value, 10);
+        }
+        parsedImportData.pairs.forEach(p => allPairs.push({ en: p.en, uz: p.uz, example: p.example, unit: fallbackUnit }));
+      }
+    } else {
+      if (pendingNewUnitName !== null) {
+        targetUnitValue = ensureTargetUnit();
+      } else {
+        targetUnitValue = isNaN(parseInt(unitSelectEl.value, 10)) ? unitSelectEl.value : parseInt(unitSelectEl.value, 10);
+      }
+      parsedImportData.pairs.forEach(p => allPairs.push({ en: p.en, uz: p.uz, example: p.example, unit: targetUnitValue }));
+    }
+
+    // Dublikatlarni o'tkazib yuborish
+    const existingEn = new Set(state.words.map(w => (w.en || '').toLowerCase().trim()));
+    const fresh = [];
+    let dupCount = 0;
+    allPairs.forEach(p => {
+      const key = (p.en || '').toLowerCase().trim();
+      if (existingEn.has(key)) { dupCount++; return; }
+      existingEn.add(key);
+      fresh.push(p);
+    });
+
+    if (fresh.length === 0) {
+      alert(dupCount > 0
+        ? `Barcha so'zlar allaqachon lug'atda mavjud (${dupCount} ta dublikat o'tkazib yuborildi).`
+        : "Qo'shish uchun so'z topilmadi.");
+      return;
+    }
+
+    fresh.forEach(p => {
+      state.words.unshift({
+        id: "word_" + Date.now() + "_" + Math.floor(Math.random() * 100000),
+        en: p.en,
+        uz: p.uz,
+        example: p.example || '',
+        box: 1,
+        unit: p.unit,
+        nextReviewDate: now,
+        nextReview: now
+      });
+    });
+
+    await saveData();
+    if (createdUnitIds.length) await saveCustomUnits();
+
+    // Yangi yaratilgan unitlarni avtomatik belgilash
+    refreshUnitUI();
+    createdUnitIds.forEach(id => {
+      const cb = document.querySelector(`.unit-checkbox[value="${id}"]`);
+      if (cb) cb.checked = true;
+    });
+    updateLeitnerBoxProgress();
+
+    if (typeof closeModalFunc === 'function') closeModalFunc();
+    renderVocabList();
+
+    let msg = `${fresh.length} ta so'z muvaffaqiyatli import qilindi!`;
+    if (createdUnits.length) msg += `\nYangi unit(lar): ${createdUnits.join(', ')}`;
+    if (dupCount > 0) msg += `\n${dupCount} ta dublikat o'tkazib yuborildi.`;
+    alert(msg);
   });
 }
 
@@ -2295,11 +3099,14 @@ function exitSession() {
 document.addEventListener("DOMContentLoaded", async () => {
   await loadData();
   await loadIrregularVerbs();
+  await loadCustomUnits();
 
   initNavigation();
   initVocabControls();
   initIrregularVerbsControls();
   initExerciseControls();
+
+  refreshUnitUI();
 
   updateLeitnerBoxProgress();
   updateGreeting(getRandomGreeting());
